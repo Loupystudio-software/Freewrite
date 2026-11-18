@@ -6,6 +6,7 @@ import {
   validateProject,
   type Project,
   type Conversation,
+  type Variable,
   type ValidationResult,
 } from "@freewrite/core";
 import {
@@ -33,6 +34,9 @@ interface ProjectState {
   addConversation: (conversation: Conversation) => void;
   updateConversation: (id: string, patch: Partial<Conversation>) => void;
   removeConversation: (id: string) => void;
+  addVariable: (variable: Variable) => void;
+  updateVariable: (id: string, patch: Partial<Variable>) => void;
+  removeVariable: (id: string) => void;
   markDirty: () => void;
   saveToHandle: () => Promise<void>;
   saveAs: () => Promise<void>;
@@ -126,6 +130,41 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     const updated: Project = {
       ...project,
       conversations: project.conversations.filter((c) => c.id !== id),
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  addVariable: (variable) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      variables: [...project.variables, variable],
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  updateVariable: (id, patch) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      variables: project.variables.map((v) =>
+        v.id === id ? { ...v, ...patch } : v
+      ),
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  removeVariable: (id) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      variables: project.variables.filter((v) => v.id !== id),
     };
     const validationResult = validateProject(updated);
     set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });

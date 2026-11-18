@@ -106,11 +106,10 @@ export function Sidebar({ onNewProject, onNewConversation }: Props) {
                 <li
                   key={conv.id}
                   onClick={() => openConversation(conv.id)}
-                  className={`group flex items-center justify-between px-2 py-1.5 rounded-sm text-xs cursor-pointer transition-colors ${
-                    isActive
-                      ? "bg-fw-bg text-fw-accent font-medium border-l-2 border-fw-accent"
-                      : "text-fw-text hover:bg-fw-bg"
-                  }`}
+                  className={`group flex items-center justify-between px-2 py-1.5 rounded-sm text-xs cursor-pointer transition-colors ${isActive
+                    ? "bg-fw-bg text-fw-accent font-medium border-l-2 border-fw-accent"
+                    : "text-fw-text hover:bg-fw-bg"
+                    }`}
                   title={conv.title}
                 >
                   <div className="flex items-center gap-1.5 truncate">
