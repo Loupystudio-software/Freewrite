@@ -4,10 +4,13 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "pnpm --filter @freewrite/web dev",
-    "build": "pnpm --filter @freewrite/core build && pnpm --filter @freewrite/web build",
-    "typecheck": "pnpm -r typecheck"
+    "server": "pnpm --filter @freewrite/server start",
+    "build": "pnpm --filter @freewrite/core build && pnpm --filter @freewrite/server build && pnpm --filter @freewrite/web build",
+    "typecheck": "pnpm -r typecheck",
+    "test:collab": "node ./scripts/test-collaboration.cjs"
   },
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "ws": "^8.23.0"
   }
 }

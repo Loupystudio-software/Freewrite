@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "uuid": "^9.0.0",
+    "yjs": "^13.6.33",
     "zod": "^3.22.0"
   },
   "devDependencies": {

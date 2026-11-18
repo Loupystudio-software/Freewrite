@@ -1,21 +1,48 @@
-import React, { useState } from "react";
-import { Save, Settings, Users, Sliders, Play } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Save, Settings, Users, Sliders, Play, Wifi } from "lucide-react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
+import {
+  collaborationManager,
+  type ConnectionState,
+  type Collaborator,
+} from "../../features/collaboration/collaborationManager";
 
 interface Props {
   onNewProject: () => void;
   onOpenVariables: () => void;
   onOpenSimulator: () => void;
+  onOpenCollaboration: () => void;
 }
 
-export function TopBar({ onNewProject, onOpenVariables, onOpenSimulator }: Props) {
+export function TopBar({
+  onNewProject,
+  onOpenVariables,
+  onOpenSimulator,
+  onOpenCollaboration,
+}: Props) {
   const { project, saveStatus, isDirty, saveToHandle } = useProjectStore();
   const activeConversationId = useConversationStore((s) => s.activeConversationId);
   const updateProjectMeta = useProjectStore((s) => s.updateProjectMeta);
 
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
+
+  const [collabStatus, setCollabStatus] = useState<ConnectionState>(
+    collaborationManager.status
+  );
+  const [collaborators, setCollaborators] = useState<Collaborator[]>(
+    collaborationManager.collaborators
+  );
+
+  useEffect(() => {
+    const unsubStatus = collaborationManager.onStatusChange(setCollabStatus);
+    const unsubCollab = collaborationManager.onCollaboratorsChange(setCollaborators);
+    return () => {
+      unsubStatus();
+      unsubCollab();
+    };
+  }, []);
 
   const handleNameClick = () => {
     if (!project) return;
@@ -124,7 +151,44 @@ export function TopBar({ onNewProject, onOpenVariables, onOpenSimulator }: Props
         </div>
       )}
 
-      <div className="flex items-center gap-2">
+      {/* Collaborators & Presence */}
+      <div className="flex items-center gap-1">
+        {/* Avatars of active collaborators */}
+        {collaborators.map((c) => (
+          <div
+            key={c.clientId}
+            className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-white text-[10px] shadow cursor-pointer border border-black/40 hover:scale-105 transition-transform"
+            style={{ backgroundColor: c.color }}
+            title={`${c.name} (Online)`}
+            onClick={onOpenCollaboration}
+          >
+            {c.name.slice(0, 2).toUpperCase()}
+          </div>
+        ))}
+
+        <button
+          onClick={onOpenCollaboration}
+          className={`flex items-center gap-1.5 px-2 py-1 text-xs rounded border transition-colors ${
+            collabStatus === "connected"
+              ? "bg-green-950/30 text-green-300 border-green-600/50 hover:bg-green-900/40"
+              : "text-fw-muted hover:text-fw-text border-fw-border hover:border-fw-text bg-fw-bg"
+          }`}
+          title="Collaborators & Multiuser Sync"
+        >
+          {collabStatus === "connected" ? (
+            <Wifi size={13} className="text-green-400" />
+          ) : (
+            <Users size={13} />
+          )}
+          <span>
+            {collabStatus === "connected"
+              ? `Live (${collaborators.length + 1})`
+              : "Collaborate"}
+          </span>
+        </button>
+      </div>
+
+      <div className="flex items-center gap-2 ml-1">
         {project && isDirty && (
           <button
             onClick={() => saveToHandle()}
@@ -135,12 +199,6 @@ export function TopBar({ onNewProject, onOpenVariables, onOpenSimulator }: Props
             Save
           </button>
         )}
-        <button
-          className="p-1 text-fw-muted hover:text-fw-text transition-colors"
-          title="Collaborators (Milestone 4)"
-        >
-          <Users size={15} />
-        </button>
         <button
           className="p-1 text-fw-muted hover:text-fw-text transition-colors"
           title="Settings"

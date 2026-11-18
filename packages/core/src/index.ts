@@ -9,3 +9,4 @@ export * from "./validation/projectValidator.js";
 export * from "./serialization/projectSerializer.js";
 export * from "./simulation/evaluator.js";
 export * from "./simulation/engine.js";
+export * from "./collaboration/yjsBinding.js";

@@ -6,6 +6,7 @@ import type {
   Conversation,
 } from "@freewrite/core";
 import { useProjectStore } from "./projectStore";
+import { collaborationManager } from "../features/collaboration/collaborationManager";
 
 interface ConversationStoreState {
   activeConversationId: string | null;
@@ -85,14 +86,27 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
 
   openConversation: (id) => {
     set({ activeConversationId: id, selectedNodeId: null });
+    collaborationManager.updatePresence({
+      activeConversationId: id,
+      selectedNodeId: null,
+    });
   },
 
   closeConversation: () => {
     set({ activeConversationId: null, selectedNodeId: null });
+    collaborationManager.updatePresence({
+      activeConversationId: null,
+      selectedNodeId: null,
+    });
   },
 
   setSelectedNodeId: (id) => {
     set({ selectedNodeId: id });
+    const { activeConversationId } = get();
+    collaborationManager.updatePresence({
+      activeConversationId,
+      selectedNodeId: id,
+    });
   },
 
   createConversation: (title) => {
@@ -111,11 +125,25 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
 
     useProjectStore.getState().addConversation(newConv);
     set({ activeConversationId: id, selectedNodeId: null });
+
+    const updatedProject = useProjectStore.getState().project;
+    if (updatedProject) {
+      collaborationManager.syncFullProject(updatedProject);
+    }
+    collaborationManager.updatePresence({
+      activeConversationId: id,
+      selectedNodeId: null,
+    });
+
     return id;
   },
 
   renameConversation: (id, title) => {
     useProjectStore.getState().updateConversation(id, { title });
+    const updatedProject = useProjectStore.getState().project;
+    if (updatedProject) {
+      collaborationManager.syncFullProject(updatedProject);
+    }
   },
 
   deleteConversation: (id) => {
@@ -123,6 +151,14 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
     useProjectStore.getState().removeConversation(id);
     if (activeConversationId === id) {
       set({ activeConversationId: null, selectedNodeId: null });
+      collaborationManager.updatePresence({
+        activeConversationId: null,
+        selectedNodeId: null,
+      });
+    }
+    const updatedProject = useProjectStore.getState().project;
+    if (updatedProject) {
+      collaborationManager.syncFullProject(updatedProject);
     }
   },
 
@@ -138,13 +174,20 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
     const updatedNodes = [...conv.nodes, newNode];
     const patch: Partial<Conversation> = { nodes: updatedNodes };
 
-    // If first node or type is start and no startNodeId, set startNodeId
     if (newNode.type === "start" && !conv.startNodeId) {
       patch.startNodeId = newNode.id;
     }
 
     useProjectStore.getState().updateConversation(activeConversationId, patch);
     set({ selectedNodeId: newNode.id });
+
+    // Sync node to Y.Doc
+    collaborationManager.syncNode(activeConversationId, newNode);
+    collaborationManager.updatePresence({
+      activeConversationId,
+      selectedNodeId: newNode.id,
+    });
+
     return newNode.id;
   },
 
@@ -156,14 +199,22 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
     const conv = project?.conversations.find((c) => c.id === activeConversationId);
     if (!conv) return;
 
+    let targetNode: AnyDialogueNode | null = null;
     const updatedNodes = conv.nodes.map((node) => {
       if (node.id !== nodeId) return node;
-      return { ...node, ...patch } as AnyDialogueNode;
+      const updated = { ...node, ...patch } as AnyDialogueNode;
+      targetNode = updated;
+      return updated;
     });
 
     useProjectStore.getState().updateConversation(activeConversationId, {
       nodes: updatedNodes,
     });
+
+    // Sync node to Y.Doc
+    if (targetNode) {
+      collaborationManager.syncNode(activeConversationId, targetNode);
+    }
   },
 
   removeNode: (nodeId) => {
@@ -193,7 +244,14 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
 
     if (selectedNodeId === nodeId) {
       set({ selectedNodeId: null });
+      collaborationManager.updatePresence({
+        activeConversationId,
+        selectedNodeId: null,
+      });
     }
+
+    // Sync removal to Y.Doc
+    collaborationManager.removeNode(activeConversationId, nodeId);
   },
 
   moveNode: (nodeId, position) => {
@@ -204,14 +262,22 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
     const conv = project?.conversations.find((c) => c.id === activeConversationId);
     if (!conv) return;
 
+    let targetNode: AnyDialogueNode | null = null;
     const updatedNodes = conv.nodes.map((node) => {
       if (node.id !== nodeId) return node;
-      return { ...node, position };
+      const updated = { ...node, position };
+      targetNode = updated;
+      return updated;
     });
 
     useProjectStore.getState().updateConversation(activeConversationId, {
       nodes: updatedNodes,
     });
+
+    // Sync position to Y.Doc
+    if (targetNode) {
+      collaborationManager.syncNode(activeConversationId, targetNode);
+    }
   },
 
   addConnection: (sourceNodeId, targetNodeId) => {
@@ -222,7 +288,6 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
     const conv = project?.conversations.find((c) => c.id === activeConversationId);
     if (!conv) return;
 
-    // Check if duplicate connection exists
     const exists = conv.connections.some(
       (c) => c.sourceNodeId === sourceNodeId && c.targetNodeId === targetNodeId
     );
@@ -240,6 +305,9 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
     useProjectStore.getState().updateConversation(activeConversationId, {
       connections: [...conv.connections, newConn],
     });
+
+    // Sync connection to Y.Doc
+    collaborationManager.syncConnection(activeConversationId, newConn);
   },
 
   removeConnection: (connectionId) => {
@@ -254,6 +322,9 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
     useProjectStore.getState().updateConversation(activeConversationId, {
       connections: updatedConns,
     });
+
+    // Sync removal to Y.Doc
+    collaborationManager.removeConnection(activeConversationId, connectionId);
   },
 
   setStartNode: (nodeId) => {
@@ -262,5 +333,9 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
     useProjectStore.getState().updateConversation(activeConversationId, {
       startNodeId: nodeId,
     });
+    const updatedProject = useProjectStore.getState().project;
+    if (updatedProject) {
+      collaborationManager.syncFullProject(updatedProject);
+    }
   },
 }));

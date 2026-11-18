@@ -8,6 +8,7 @@ import { NewProjectDialog } from "../dialogs/NewProjectDialog";
 import { NewConversationDialog } from "../dialogs/NewConversationDialog";
 import { VariablesModal } from "../dialogs/VariablesModal";
 import { DialogueSimulatorModal } from "../simulation/DialogueSimulatorModal";
+import { CollaborationModal } from "../dialogs/CollaborationModal";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
 
@@ -16,6 +17,7 @@ export function AppShell() {
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showVariablesModal, setShowVariablesModal] = useState(false);
   const [showSimulatorModal, setShowSimulatorModal] = useState(false);
+  const [showCollaborationModal, setShowCollaborationModal] = useState(false);
 
   const { project, saveToHandle, isDirty } = useProjectStore();
   const activeConversationId = useConversationStore((s) => s.activeConversationId);
@@ -51,6 +53,7 @@ export function AppShell() {
         onNewProject={() => setShowNewProject(true)}
         onOpenVariables={() => setShowVariablesModal(true)}
         onOpenSimulator={() => setShowSimulatorModal(true)}
+        onOpenCollaboration={() => setShowCollaborationModal(true)}
       />
 
       {/* Menu bar */}
@@ -75,6 +78,14 @@ export function AppShell() {
             className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors"
           >
             Variables ({project.variables.length})
+          </button>
+        )}
+        {project && (
+          <button
+            onClick={() => setShowCollaborationModal(true)}
+            className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors"
+          >
+            Collaborate
           </button>
         )}
         {project && activeConv && (
@@ -115,6 +126,9 @@ export function AppShell() {
       )}
       {showVariablesModal && (
         <VariablesModal onClose={() => setShowVariablesModal(false)} />
+      )}
+      {showCollaborationModal && (
+        <CollaborationModal onClose={() => setShowCollaborationModal(false)} />
       )}
       {showSimulatorModal && activeConv && project && (
         <DialogueSimulatorModal
