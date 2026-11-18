@@ -1,0 +1,13 @@
+{
+  "name": "freewrite",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "pnpm --filter @freewrite/web dev",
+    "build": "pnpm --filter @freewrite/core build && pnpm --filter @freewrite/web build",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
