@@ -3,13 +3,16 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
+    "start": "concurrently -k -n \"server,web\" -c \"magenta,cyan\" \"pnpm server\" \"pnpm dev\"",
     "dev": "pnpm --filter @freewrite/web dev",
     "server": "pnpm --filter @freewrite/server start",
+    "dev:all": "concurrently -k -n \"server,web\" -c \"magenta,cyan\" \"pnpm server\" \"pnpm dev\"",
     "build": "pnpm --filter @freewrite/core build && pnpm --filter @freewrite/server build && pnpm --filter @freewrite/web build",
     "typecheck": "pnpm -r typecheck",
     "test:collab": "node ./scripts/test-collaboration.cjs"
   },
   "devDependencies": {
+    "concurrently": "^10.0.7",
     "typescript": "^5.4.0",
     "ws": "^8.23.0"
   }

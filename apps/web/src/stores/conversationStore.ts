@@ -49,6 +49,9 @@ function createDefaultNode(
         dialogueText: "Enter dialogue here...",
         conditions: [],
         actions: [],
+        conditionsString: "",
+        script: "",
+        sequence: "",
       };
     case "player_response":
       return {
@@ -59,6 +62,9 @@ function createDefaultNode(
         menuText: "",
         conditions: [],
         actions: [],
+        conditionsString: "",
+        script: "",
+        sequence: "",
       };
     case "condition":
       return {

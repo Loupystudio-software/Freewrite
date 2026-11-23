@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Save, Settings, Users, Sliders, Play, Wifi } from "lucide-react";
+import { Save, Settings, Users, Sliders, Play, Wifi, ArrowDownUp } from "lucide-react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
 import {
@@ -13,6 +13,7 @@ interface Props {
   onOpenVariables: () => void;
   onOpenSimulator: () => void;
   onOpenCollaboration: () => void;
+  onOpenImportExport: (tab?: "import" | "export") => void;
 }
 
 export function TopBar({
@@ -20,6 +21,7 @@ export function TopBar({
   onOpenVariables,
   onOpenSimulator,
   onOpenCollaboration,
+  onOpenImportExport,
 }: Props) {
   const { project, saveStatus, isDirty, saveToHandle } = useProjectStore();
   const activeConversationId = useConversationStore((s) => s.activeConversationId);
@@ -148,6 +150,16 @@ export function TopBar({
               <span>Simulate</span>
             </button>
           )}
+
+          {/* Dialogue System Unity Import/Export */}
+          <button
+            onClick={() => onOpenImportExport("export")}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-fw-muted hover:text-fw-text bg-fw-bg border border-fw-border rounded hover:border-fw-text transition-colors"
+            title="Export / Import Dialogue System for Unity (CSV / Chat Mapper XML)"
+          >
+            <ArrowDownUp size={13} className="text-amber-400" />
+            <span>Unity DS4U</span>
+          </button>
         </div>
       )}
 

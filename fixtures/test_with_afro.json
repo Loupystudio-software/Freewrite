@@ -1,0 +1,641 @@
+{
+  "format": "freewrite",
+  "schemaVersion": "1.0.0",
+  "project": {
+    "id": "eaee3740-3125-41ef-9751-f91978ff83dc",
+    "name": "My Project",
+    "description": "",
+    "author": "Loupy",
+    "createdAt": "2026-11-18T19:39:28.842Z",
+    "updatedAt": "2026-11-19T01:29:21.309Z"
+  },
+  "actors": [],
+  "conversations": [
+    {
+      "id": "673ca1a0-32dc-48a4-8b74-f87d5aab1da7",
+      "externalId": null,
+      "title": "New Conversation",
+      "description": "",
+      "actorId": null,
+      "conversantId": null,
+      "startNodeId": "b0a35189-53b6-41c4-aad4-a6e3f207cee4",
+      "metadata": {},
+      "nodes": [
+        {
+          "id": "b0a35189-53b6-41c4-aad4-a6e3f207cee4",
+          "position": {
+            "x": 448,
+            "y": 187
+          },
+          "metadata": {},
+          "type": "start",
+          "label": "Start"
+        },
+        {
+          "id": "1b5074fa-6249-41fe-8769-79a9617e9958",
+          "position": {
+            "x": 428,
+            "y": 272
+          },
+          "metadata": {},
+          "type": "dialogue",
+          "speakerId": null,
+          "menuText": "",
+          "dialogueText": "Fuck u!",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "63c568bb-dce3-4f17-ac46-618a362c11fd",
+          "position": {
+            "x": 297,
+            "y": 391
+          },
+          "metadata": {},
+          "type": "dialogue",
+          "speakerId": null,
+          "menuText": "Damn bro, chill",
+          "dialogueText": "Damn bro, chill",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "24eaf183-3552-4c86-9484-9c7ff2977e49",
+          "position": {
+            "x": 560,
+            "y": 391
+          },
+          "metadata": {},
+          "type": "dialogue",
+          "speakerId": null,
+          "menuText": "",
+          "dialogueText": "Nah",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "3e11d4b7-477a-4dd9-a3be-d18923444ae2",
+          "position": {
+            "x": 427,
+            "y": 518
+          },
+          "metadata": {},
+          "type": "dialogue",
+          "speakerId": null,
+          "menuText": "",
+          "dialogueText": "Aight my bad twin",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "d91ed0e9-ee1b-4807-8807-680c2ea2ba14",
+          "position": {
+            "x": 437,
+            "y": 636
+          },
+          "metadata": {},
+          "type": "action",
+          "actionType": "ass_whooped=true",
+          "parameters": {}
+        },
+        {
+          "id": "0209228c-3acc-4f08-b102-f75ae3612efa",
+          "position": {
+            "x": 447,
+            "y": 770
+          },
+          "metadata": {},
+          "type": "end",
+          "label": "End"
+        },
+        {
+          "id": "24497e42-6c8c-47ce-88e5-43a59db989e3",
+          "position": {
+            "x": 698,
+            "y": 219
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "Wowww I can write comments"
+        },
+        {
+          "id": "74e7472f-7c60-49a2-a044-004724ff8e58",
+          "position": {
+            "x": 194,
+            "y": 597
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "Such a cool dialogue amarite?"
+        }
+      ],
+      "connections": [
+        {
+          "id": "f75cdfe9-b552-41b8-a9e8-0e216dca30b5",
+          "sourceNodeId": "b0a35189-53b6-41c4-aad4-a6e3f207cee4",
+          "targetNodeId": "1b5074fa-6249-41fe-8769-79a9617e9958",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "5e296611-32a8-4637-8821-bad80bc60305",
+          "sourceNodeId": "1b5074fa-6249-41fe-8769-79a9617e9958",
+          "targetNodeId": "63c568bb-dce3-4f17-ac46-618a362c11fd",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "9f08b708-d20f-4183-b8b6-29f3e5ac3917",
+          "sourceNodeId": "1b5074fa-6249-41fe-8769-79a9617e9958",
+          "targetNodeId": "24eaf183-3552-4c86-9484-9c7ff2977e49",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "55bdfce5-9afb-4430-9a0b-1e152d7e0aa3",
+          "sourceNodeId": "63c568bb-dce3-4f17-ac46-618a362c11fd",
+          "targetNodeId": "3e11d4b7-477a-4dd9-a3be-d18923444ae2",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "9e9b832a-8655-4b88-bc74-8ec71e3bac43",
+          "sourceNodeId": "24eaf183-3552-4c86-9484-9c7ff2977e49",
+          "targetNodeId": "3e11d4b7-477a-4dd9-a3be-d18923444ae2",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "5a3742a1-9f90-45b9-b113-d5a58ba70512",
+          "sourceNodeId": "3e11d4b7-477a-4dd9-a3be-d18923444ae2",
+          "targetNodeId": "d91ed0e9-ee1b-4807-8807-680c2ea2ba14",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "35b97c80-4de1-43c5-8184-fd175624319d",
+          "sourceNodeId": "d91ed0e9-ee1b-4807-8807-680c2ea2ba14",
+          "targetNodeId": "0209228c-3acc-4f08-b102-f75ae3612efa",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "id": "ce499f02-a5e0-4a94-945a-1d7279a0b06a",
+      "externalId": null,
+      "title": "hi afro here",
+      "description": "",
+      "actorId": null,
+      "conversantId": null,
+      "startNodeId": "7b4c9fda-ff57-4c2f-ada5-d0e78c5fa600",
+      "metadata": {},
+      "nodes": [
+        {
+          "id": "7b4c9fda-ff57-4c2f-ada5-d0e78c5fa600",
+          "position": {
+            "x": 699,
+            "y": 215
+          },
+          "metadata": {},
+          "type": "start",
+          "label": "Start"
+        },
+        {
+          "id": "7e4640c3-130a-4fb0-b857-129ec8a55690",
+          "position": {
+            "x": 679,
+            "y": 435
+          },
+          "metadata": {},
+          "type": "dialogue",
+          "speakerId": null,
+          "menuText": "",
+          "dialogueText": "hi afro has joined your sever",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "57b71314-0902-4554-9c75-3f1a7a974f69",
+          "position": {
+            "x": 762,
+            "y": 582
+          },
+          "metadata": {},
+          "type": "player_response",
+          "speakerId": null,
+          "responseText": "Finally god it took for ever to load in",
+          "menuText": "",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "660a5c7c-8530-4376-8916-a288482533a6",
+          "position": {
+            "x": 525,
+            "y": 583
+          },
+          "metadata": {},
+          "type": "player_response",
+          "speakerId": null,
+          "responseText": "where am i?",
+          "menuText": "",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "c2cd5fc2-4aa9-4943-90ab-eda14196ab62",
+          "position": {
+            "x": 993,
+            "y": 580
+          },
+          "metadata": {},
+          "type": "player_response",
+          "speakerId": null,
+          "responseText": "oops wrong server",
+          "menuText": "",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "62db60d5-897d-4bd2-8b70-332b5fe6a777",
+          "position": {
+            "x": 1013,
+            "y": 1443
+          },
+          "metadata": {},
+          "type": "end",
+          "label": "End"
+        },
+        {
+          "id": "dbfb6294-a677-46a8-8f17-1b0e0d419b3f",
+          "position": {
+            "x": 1003,
+            "y": 833
+          },
+          "metadata": {},
+          "type": "action",
+          "actionType": "bye = true",
+          "parameters": {}
+        },
+        {
+          "id": "e5459c03-a333-4d82-8375-f8f0cbda56b0",
+          "position": {
+            "x": 1246,
+            "y": 380
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "that works so well omg lol"
+        },
+        {
+          "id": "d7d1f13a-400e-46aa-a3b0-5620fc0e329f",
+          "position": {
+            "x": 1003,
+            "y": 1208
+          },
+          "metadata": {},
+          "type": "condition",
+          "expression": "bye == true"
+        },
+        {
+          "id": "2720ca04-1243-495c-9b1c-29315f57efdf",
+          "position": {
+            "x": 1212,
+            "y": 448
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "I'll make the scripting LUA like in the system I'm using on Unity"
+        },
+        {
+          "id": "1f527df7-8147-47dd-b1fc-093f081e00bc",
+          "position": {
+            "x": 772,
+            "y": 1208
+          },
+          "metadata": {},
+          "type": "condition",
+          "expression": "bye == false"
+        },
+        {
+          "id": "dbaaad21-0a6c-439d-8f44-6fc331726a78",
+          "position": {
+            "x": 525,
+            "y": 706
+          },
+          "metadata": {},
+          "type": "dialogue",
+          "speakerId": null,
+          "menuText": "",
+          "dialogueText": "my home somehow?",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "bb622ee8-5604-48d0-8cbf-adc376683d31",
+          "position": {
+            "x": 623,
+            "y": 830
+          },
+          "metadata": {},
+          "type": "player_response",
+          "speakerId": null,
+          "responseText": "oh... well ill have a lookaround then",
+          "menuText": "",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "3cfc291b-089a-40cd-8e6d-c83b8c6d30ff",
+          "position": {
+            "x": 322,
+            "y": 829
+          },
+          "metadata": {},
+          "type": "player_response",
+          "speakerId": null,
+          "responseText": "oh.. wrong place byeee\n",
+          "menuText": "",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "139b5e68-9126-4007-a887-2423f69e92a4",
+          "position": {
+            "x": 689,
+            "y": 316
+          },
+          "metadata": {},
+          "type": "action",
+          "actionType": "bye = false",
+          "parameters": {}
+        },
+        {
+          "id": "2aef5ff2-626d-481c-b1ff-df375a0ded95",
+          "position": {
+            "x": 1294,
+            "y": 534
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "lol"
+        },
+        {
+          "id": "8cdc0a4f-7f23-4599-850c-a0feab74d997",
+          "position": {
+            "x": 876,
+            "y": 1093
+          },
+          "metadata": {},
+          "type": "dialogue",
+          "speakerId": null,
+          "menuText": "",
+          "dialogueText": "what a weird fella",
+          "conditions": [],
+          "actions": []
+        },
+        {
+          "id": "dae8bd85-f758-4ccf-ab07-eb80d131a1df",
+          "position": {
+            "x": 453,
+            "y": 950
+          },
+          "metadata": {},
+          "type": "action",
+          "actionType": "bye = true",
+          "parameters": {}
+        },
+        {
+          "id": "730f569c-ecbb-4d0e-b07d-615b2c35c30e",
+          "position": {
+            "x": 772,
+            "y": 1330
+          },
+          "metadata": {},
+          "type": "action",
+          "actionType": "startGame = true",
+          "parameters": {}
+        },
+        {
+          "id": "1e8709bc-2bd8-44e8-b7de-3ed4a4baa3f3",
+          "position": {
+            "x": 1248,
+            "y": 652
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "How about I add integration with TLDraw/other design tools like that to load blackboards in the background lol, so devs can see design documents with drawing & stuff?\n\nor just remake that here ig"
+        },
+        {
+          "id": "aba6f133-6dd3-47c9-abc4-2de432b3b7b6",
+          "position": {
+            "x": 1459,
+            "y": 921
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "Just gonna add **mardown** for the [comments](https://comments.com) with pic display :>"
+        },
+        {
+          "id": "43dcb5d5-2112-46da-8af8-07f9efed461a",
+          "position": {
+            "x": 280,
+            "y": 706
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "player lost and unsure, narator helps out"
+        },
+        {
+          "id": "6cadf9c5-9ef0-42fb-9a26-01b1d59e86f1",
+          "position": {
+            "x": 808,
+            "y": 671
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "player confident in their decision. no narrator"
+        },
+        {
+          "id": "d79059be-b4c2-4b6b-aa92-432bc01e2c51",
+          "position": {
+            "x": 1212,
+            "y": 830
+          },
+          "metadata": {},
+          "type": "comment",
+          "text": "you could add a black board that can be exported to those websites. that way if a writer needs to draft something they can just draft it and export it as a where they need it.\n\nand ofc import pic function so they dont need to go around all the other websites think that would be cleanest"
+        }
+      ],
+      "connections": [
+        {
+          "id": "ab90fa38-1e19-4fb1-8f58-6fff52911d8a",
+          "sourceNodeId": "7e4640c3-130a-4fb0-b857-129ec8a55690",
+          "targetNodeId": "660a5c7c-8530-4376-8916-a288482533a6",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "9b2151d1-bb1d-4753-8ea5-b887a8fc07e9",
+          "sourceNodeId": "7e4640c3-130a-4fb0-b857-129ec8a55690",
+          "targetNodeId": "57b71314-0902-4554-9c75-3f1a7a974f69",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "51a993e9-ebbd-4ae3-82a1-e8797c3fd13e",
+          "sourceNodeId": "7e4640c3-130a-4fb0-b857-129ec8a55690",
+          "targetNodeId": "c2cd5fc2-4aa9-4943-90ab-eda14196ab62",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "bfe3f994-c45b-4747-98eb-07b73c1b3df4",
+          "sourceNodeId": "c2cd5fc2-4aa9-4943-90ab-eda14196ab62",
+          "targetNodeId": "dbfb6294-a677-46a8-8f17-1b0e0d419b3f",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "f0f7c329-7cf6-4844-927e-a326b9cbf9be",
+          "sourceNodeId": "d7d1f13a-400e-46aa-a3b0-5620fc0e329f",
+          "targetNodeId": "62db60d5-897d-4bd2-8b70-332b5fe6a777",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "9904b2ec-8df8-4c89-aada-8c0fcfe331a6",
+          "sourceNodeId": "dbfb6294-a677-46a8-8f17-1b0e0d419b3f",
+          "targetNodeId": "d7d1f13a-400e-46aa-a3b0-5620fc0e329f",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "e83893a1-ffa8-4113-95ac-d7b45dc62eef",
+          "sourceNodeId": "660a5c7c-8530-4376-8916-a288482533a6",
+          "targetNodeId": "dbaaad21-0a6c-439d-8f44-6fc331726a78",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "1c7a384c-24a8-47cf-980e-3f81b79484a3",
+          "sourceNodeId": "57b71314-0902-4554-9c75-3f1a7a974f69",
+          "targetNodeId": "1f527df7-8147-47dd-b1fc-093f081e00bc",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "0aa8a3ca-c27f-4d95-a595-67a20f14de67",
+          "sourceNodeId": "dbaaad21-0a6c-439d-8f44-6fc331726a78",
+          "targetNodeId": "bb622ee8-5604-48d0-8cbf-adc376683d31",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "1a87218c-847a-444a-a49c-dcc4396b1c43",
+          "sourceNodeId": "7b4c9fda-ff57-4c2f-ada5-d0e78c5fa600",
+          "targetNodeId": "139b5e68-9126-4007-a887-2423f69e92a4",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "c97bb4e8-7ce3-40e3-ac55-21ce78109678",
+          "sourceNodeId": "139b5e68-9126-4007-a887-2423f69e92a4",
+          "targetNodeId": "7e4640c3-130a-4fb0-b857-129ec8a55690",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "e67d1734-9968-474d-b73a-29ba61db491d",
+          "sourceNodeId": "dbaaad21-0a6c-439d-8f44-6fc331726a78",
+          "targetNodeId": "3cfc291b-089a-40cd-8e6d-c83b8c6d30ff",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "bbd128ab-e31e-4f54-a7d8-53adadaadf56",
+          "sourceNodeId": "bb622ee8-5604-48d0-8cbf-adc376683d31",
+          "targetNodeId": "8cdc0a4f-7f23-4599-850c-a0feab74d997",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "9ce12753-79a2-46b1-a743-e3453c5047cd",
+          "sourceNodeId": "3cfc291b-089a-40cd-8e6d-c83b8c6d30ff",
+          "targetNodeId": "dae8bd85-f758-4ccf-ab07-eb80d131a1df",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "6921d0fe-3415-4174-9a6e-442d75a5de27",
+          "sourceNodeId": "dae8bd85-f758-4ccf-ab07-eb80d131a1df",
+          "targetNodeId": "8cdc0a4f-7f23-4599-850c-a0feab74d997",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "cd1b6243-809e-4138-a406-3ef4b071d3dd",
+          "sourceNodeId": "8cdc0a4f-7f23-4599-850c-a0feab74d997",
+          "targetNodeId": "1f527df7-8147-47dd-b1fc-093f081e00bc",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "57a064fc-939d-4e47-a812-e592c3814e0c",
+          "sourceNodeId": "8cdc0a4f-7f23-4599-850c-a0feab74d997",
+          "targetNodeId": "d7d1f13a-400e-46aa-a3b0-5620fc0e329f",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "c4b6c184-636e-42c2-9446-8add96053930",
+          "sourceNodeId": "1f527df7-8147-47dd-b1fc-093f081e00bc",
+          "targetNodeId": "730f569c-ecbb-4d0e-b07d-615b2c35c30e",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        },
+        {
+          "id": "7daaf52b-fe18-41ab-af98-abe4de98e46f",
+          "sourceNodeId": "730f569c-ecbb-4d0e-b07d-615b2c35c30e",
+          "targetNodeId": "62db60d5-897d-4bd2-8b70-332b5fe6a777",
+          "priority": 0,
+          "conditions": [],
+          "metadata": {}
+        }
+      ]
+    }
+  ],
+  "variables": [],
+  "items": [],
+  "locations": [],
+  "metadata": {
+    "applicationVersion": "0.1.0",
+    "exportSettings": {}
+  }
+}

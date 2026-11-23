@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const BaseNodeSchema = z.object({
   id: z.string().uuid(),
+  externalId: z.number().int().optional().nullable(),
   position: z.object({ x: z.number(), y: z.number() }),
   metadata: z.record(z.unknown()).default({}),
 });
@@ -18,6 +19,9 @@ export const DialogueNodeSchema = BaseNodeSchema.extend({
   dialogueText: z.string().default(""),
   conditions: z.array(z.unknown()).default([]),
   actions: z.array(z.unknown()).default([]),
+  conditionsString: z.string().optional().default(""),
+  script: z.string().optional().default(""),
+  sequence: z.string().optional().default(""),
 });
 
 export const PlayerResponseNodeSchema = BaseNodeSchema.extend({
@@ -27,6 +31,9 @@ export const PlayerResponseNodeSchema = BaseNodeSchema.extend({
   menuText: z.string().default(""),
   conditions: z.array(z.unknown()).default([]),
   actions: z.array(z.unknown()).default([]),
+  conditionsString: z.string().optional().default(""),
+  script: z.string().optional().default(""),
+  sequence: z.string().optional().default(""),
 });
 
 export const ConditionNodeSchema = BaseNodeSchema.extend({

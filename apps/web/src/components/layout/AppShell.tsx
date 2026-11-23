@@ -9,6 +9,7 @@ import { NewConversationDialog } from "../dialogs/NewConversationDialog";
 import { VariablesModal } from "../dialogs/VariablesModal";
 import { DialogueSimulatorModal } from "../simulation/DialogueSimulatorModal";
 import { CollaborationModal } from "../dialogs/CollaborationModal";
+import { ImportExportModal } from "../dialogs/ImportExportModal";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
 
@@ -18,6 +19,8 @@ export function AppShell() {
   const [showVariablesModal, setShowVariablesModal] = useState(false);
   const [showSimulatorModal, setShowSimulatorModal] = useState(false);
   const [showCollaborationModal, setShowCollaborationModal] = useState(false);
+  const [showImportExportModal, setShowImportExportModal] = useState(false);
+  const [importExportTab, setImportExportTab] = useState<"import" | "export">("export");
 
   const { project, saveToHandle, isDirty } = useProjectStore();
   const activeConversationId = useConversationStore((s) => s.activeConversationId);
@@ -54,6 +57,10 @@ export function AppShell() {
         onOpenVariables={() => setShowVariablesModal(true)}
         onOpenSimulator={() => setShowSimulatorModal(true)}
         onOpenCollaboration={() => setShowCollaborationModal(true)}
+        onOpenImportExport={(tab = "export") => {
+          setImportExportTab(tab);
+          setShowImportExportModal(true);
+        }}
       />
 
       {/* Menu bar */}
@@ -98,6 +105,17 @@ export function AppShell() {
         )}
         {project && (
           <button
+            onClick={() => {
+              setImportExportTab("export");
+              setShowImportExportModal(true);
+            }}
+            className="px-2 py-0.5 text-amber-400 hover:text-amber-300 hover:bg-fw-bg rounded-sm transition-colors"
+          >
+            Unity DS4U
+          </button>
+        )}
+        {project && (
+          <button
             onClick={() => saveToHandle()}
             className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors ml-auto"
           >
@@ -111,6 +129,10 @@ export function AppShell() {
         <Sidebar
           onNewProject={() => setShowNewProject(true)}
           onNewConversation={() => setShowNewConversation(true)}
+          onOpenImportExport={(tab) => {
+            setImportExportTab(tab || "export");
+            setShowImportExportModal(true);
+          }}
         />
         <CanvasArea onNewConversation={() => setShowNewConversation(true)} />
         <Inspector />
@@ -135,6 +157,12 @@ export function AppShell() {
           conversation={activeConv}
           project={project}
           onClose={() => setShowSimulatorModal(false)}
+        />
+      )}
+      {showImportExportModal && (
+        <ImportExportModal
+          defaultTab={importExportTab}
+          onClose={() => setShowImportExportModal(false)}
         />
       )}
     </div>
