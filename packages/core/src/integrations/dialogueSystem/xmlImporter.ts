@@ -61,7 +61,10 @@ export function importProjectFromChatMapperXML(xmlText: string): ImportXMLResult
       name: a["@_Name"] || `Actor_${extId}`,
       description: desc,
       isPlayer,
+      pictures: [],
       portrait: null,
+      color: isPlayer ? "#10b981" : "#3b82f6",
+      fields: [],
       metadata: {},
     });
   }
@@ -110,9 +113,11 @@ export function importProjectFromChatMapperXML(xmlText: string): ImportXMLResult
       description: "",
       actorId: null,
       conversantId: null,
+      priority: "Normal",
       startNodeId: null,
       nodes: [],
       connections: [],
+      fields: [],
       metadata: {},
     };
 
@@ -190,6 +195,7 @@ export function importProjectFromChatMapperXML(xmlText: string): ImportXMLResult
             externalId: entryId,
             type: "player_response",
             speakerId,
+            conversantId: null,
             menuText,
             responseText: text,
             conditions: [],
@@ -197,6 +203,9 @@ export function importProjectFromChatMapperXML(xmlText: string): ImportXMLResult
             conditionsString: conditions,
             script,
             sequence,
+            falseConditionAction: "Block",
+            priority: "Normal",
+            fields: [],
             position: { x, y },
             metadata: {},
           };
@@ -207,6 +216,7 @@ export function importProjectFromChatMapperXML(xmlText: string): ImportXMLResult
             externalId: entryId,
             type: "dialogue",
             speakerId,
+            conversantId: null,
             menuText,
             dialogueText: text,
             conditions: [],
@@ -214,6 +224,9 @@ export function importProjectFromChatMapperXML(xmlText: string): ImportXMLResult
             conditionsString: conditions,
             script,
             sequence,
+            falseConditionAction: "Block",
+            priority: "Normal",
+            fields: [],
             position: { x, y },
             metadata: {},
           };

@@ -45,6 +45,7 @@ function createDefaultNode(
         ...base,
         type: "dialogue",
         speakerId: null,
+        conversantId: null,
         menuText: "",
         dialogueText: "Enter dialogue here...",
         conditions: [],
@@ -52,12 +53,16 @@ function createDefaultNode(
         conditionsString: "",
         script: "",
         sequence: "",
+        falseConditionAction: "Block",
+        priority: "Normal",
+        fields: [],
       };
     case "player_response":
       return {
         ...base,
         type: "player_response",
         speakerId: null,
+        conversantId: null,
         responseText: "Option text...",
         menuText: "",
         conditions: [],
@@ -65,6 +70,9 @@ function createDefaultNode(
         conditionsString: "",
         script: "",
         sequence: "",
+        falseConditionAction: "Block",
+        priority: "Normal",
+        fields: [],
       };
     case "condition":
       return {
@@ -123,9 +131,11 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
       description: "",
       actorId: null,
       conversantId: null,
+      priority: "Normal",
       startNodeId: null,
       nodes: [],
       connections: [],
+      fields: [],
       metadata: {},
     };
 

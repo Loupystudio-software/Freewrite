@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CustomFieldSchema } from "./customField.js";
 
 const BaseNodeSchema = z.object({
   id: z.string().uuid(),
@@ -12,28 +13,48 @@ export const StartNodeSchema = BaseNodeSchema.extend({
   label: z.string().default(""),
 });
 
+export const DialogueNodePrioritySchema = z.enum([
+  "Low",
+  "BelowNormal",
+  "Normal",
+  "AboveNormal",
+  "High",
+]);
+export type DialogueNodePriority = z.infer<typeof DialogueNodePrioritySchema>;
+
+export const FalseConditionActionSchema = z.enum(["Block", "Passthrough"]);
+export type FalseConditionAction = z.infer<typeof FalseConditionActionSchema>;
+
 export const DialogueNodeSchema = BaseNodeSchema.extend({
   type: z.literal("dialogue"),
   speakerId: z.string().uuid().nullable().default(null),
+  conversantId: z.string().uuid().nullable().default(null),
   menuText: z.string().default(""),
   dialogueText: z.string().default(""),
   conditions: z.array(z.unknown()).default([]),
   actions: z.array(z.unknown()).default([]),
-  conditionsString: z.string().optional().default(""),
-  script: z.string().optional().default(""),
-  sequence: z.string().optional().default(""),
+  conditionsString: z.string().default(""),
+  script: z.string().default(""),
+  sequence: z.string().default(""),
+  falseConditionAction: FalseConditionActionSchema.default("Block"),
+  priority: DialogueNodePrioritySchema.default("Normal"),
+  fields: z.array(CustomFieldSchema).default([]),
 });
 
 export const PlayerResponseNodeSchema = BaseNodeSchema.extend({
   type: z.literal("player_response"),
   speakerId: z.string().uuid().nullable().default(null),
+  conversantId: z.string().uuid().nullable().default(null),
   responseText: z.string().default(""),
   menuText: z.string().default(""),
   conditions: z.array(z.unknown()).default([]),
   actions: z.array(z.unknown()).default([]),
-  conditionsString: z.string().optional().default(""),
-  script: z.string().optional().default(""),
-  sequence: z.string().optional().default(""),
+  conditionsString: z.string().default(""),
+  script: z.string().default(""),
+  sequence: z.string().default(""),
+  falseConditionAction: FalseConditionActionSchema.default("Block"),
+  priority: DialogueNodePrioritySchema.default("Normal"),
+  fields: z.array(CustomFieldSchema).default([]),
 });
 
 export const ConditionNodeSchema = BaseNodeSchema.extend({

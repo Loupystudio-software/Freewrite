@@ -7,6 +7,8 @@ import { BottomBar } from "./BottomBar";
 import { NewProjectDialog } from "../dialogs/NewProjectDialog";
 import { NewConversationDialog } from "../dialogs/NewConversationDialog";
 import { VariablesModal } from "../dialogs/VariablesModal";
+import { ActorsModal } from "../dialogs/ActorsModal";
+import { QuestsModal } from "../dialogs/QuestsModal";
 import { DialogueSimulatorModal } from "../simulation/DialogueSimulatorModal";
 import { CollaborationModal } from "../dialogs/CollaborationModal";
 import { ImportExportModal } from "../dialogs/ImportExportModal";
@@ -17,6 +19,8 @@ export function AppShell() {
   const [showNewProject, setShowNewProject] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showVariablesModal, setShowVariablesModal] = useState(false);
+  const [showActorsModal, setShowActorsModal] = useState(false);
+  const [showQuestsModal, setShowQuestsModal] = useState(false);
   const [showSimulatorModal, setShowSimulatorModal] = useState(false);
   const [showCollaborationModal, setShowCollaborationModal] = useState(false);
   const [showImportExportModal, setShowImportExportModal] = useState(false);
@@ -54,6 +58,8 @@ export function AppShell() {
     <div className="h-screen flex flex-col bg-fw-bg text-fw-text overflow-hidden select-none">
       <TopBar
         onNewProject={() => setShowNewProject(true)}
+        onOpenActors={() => setShowActorsModal(true)}
+        onOpenQuests={() => setShowQuestsModal(true)}
         onOpenVariables={() => setShowVariablesModal(true)}
         onOpenSimulator={() => setShowSimulatorModal(true)}
         onOpenCollaboration={() => setShowCollaborationModal(true)}
@@ -77,6 +83,22 @@ export function AppShell() {
             className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors"
           >
             New Conversation
+          </button>
+        )}
+        {project && (
+          <button
+            onClick={() => setShowActorsModal(true)}
+            className="px-2 py-0.5 text-blue-400 hover:text-blue-300 hover:bg-fw-bg rounded-sm transition-colors"
+          >
+            Actors ({project.actors.length})
+          </button>
+        )}
+        {project && (
+          <button
+            onClick={() => setShowQuestsModal(true)}
+            className="px-2 py-0.5 text-amber-400 hover:text-amber-300 hover:bg-fw-bg rounded-sm transition-colors"
+          >
+            Quests ({project.items?.length || 0})
           </button>
         )}
         {project && (
@@ -148,6 +170,12 @@ export function AppShell() {
       )}
       {showVariablesModal && (
         <VariablesModal onClose={() => setShowVariablesModal(false)} />
+      )}
+      {showActorsModal && (
+        <ActorsModal onClose={() => setShowActorsModal(false)} />
+      )}
+      {showQuestsModal && (
+        <QuestsModal onClose={() => setShowQuestsModal(false)} />
       )}
       {showCollaborationModal && (
         <CollaborationModal onClose={() => setShowCollaborationModal(false)} />

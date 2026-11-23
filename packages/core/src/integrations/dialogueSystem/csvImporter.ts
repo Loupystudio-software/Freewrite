@@ -153,7 +153,10 @@ export function importProjectFromDialogueSystemCSV(csvText: string): ImportCSVRe
           name: actorName,
           description: desc,
           isPlayer,
+          pictures: [],
           portrait,
+          color: isPlayer ? "#10b981" : "#3b82f6",
+          fields: [],
           metadata: {},
         });
       }
@@ -202,9 +205,11 @@ export function importProjectFromDialogueSystemCSV(csvText: string): ImportCSVRe
           conversantId: !isNaN(conversantExtId)
             ? actorExternalMap.get(conversantExtId) ?? null
             : null,
+          priority: "Normal",
           startNodeId: null,
           nodes: [],
           connections: [],
+          fields: [],
           metadata: {},
         };
 
@@ -265,6 +270,7 @@ export function importProjectFromDialogueSystemCSV(csvText: string): ImportCSVRe
                 externalId: entryId,
                 type: "player_response",
                 speakerId,
+                conversantId: null,
                 menuText,
                 responseText: dialogueText,
                 conditions: [],
@@ -272,6 +278,9 @@ export function importProjectFromDialogueSystemCSV(csvText: string): ImportCSVRe
                 conditionsString: conditions,
                 script,
                 sequence,
+                falseConditionAction: (row[8] as any) === "Passthrough" ? "Passthrough" : "Block",
+                priority: (row[9] as any) || "Normal",
+                fields: [],
                 position: { x, y },
                 metadata: {},
               };
@@ -282,6 +291,7 @@ export function importProjectFromDialogueSystemCSV(csvText: string): ImportCSVRe
                 externalId: entryId,
                 type: "dialogue",
                 speakerId,
+                conversantId: null,
                 menuText,
                 dialogueText,
                 conditions: [],
@@ -289,6 +299,9 @@ export function importProjectFromDialogueSystemCSV(csvText: string): ImportCSVRe
                 conditionsString: conditions,
                 script,
                 sequence,
+                falseConditionAction: (row[8] as any) === "Passthrough" ? "Passthrough" : "Block",
+                priority: (row[9] as any) || "Normal",
+                fields: [],
                 position: { x, y },
                 metadata: {},
               };

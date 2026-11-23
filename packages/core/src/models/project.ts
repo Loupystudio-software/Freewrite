@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ActorSchema } from "./actor.js";
 import { ConversationSchema } from "./conversation.js";
 import { VariableSchema } from "./variable.js";
+import { ItemSchema } from "./item.js";
 
 export const ProjectSchema = z.object({
   format: z.literal("freewrite"),
@@ -17,7 +18,7 @@ export const ProjectSchema = z.object({
   actors: z.array(ActorSchema).default([]),
   conversations: z.array(ConversationSchema).default([]),
   variables: z.array(VariableSchema).default([]),
-  items: z.array(z.unknown()).default([]),
+  items: z.array(ItemSchema).default([]),
   locations: z.array(z.unknown()).default([]),
   metadata: z.object({
     applicationVersion: z.string(),

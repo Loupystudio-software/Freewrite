@@ -9,12 +9,15 @@ import {
   type VariableEnvironment,
   type VariableValue,
 } from "./evaluator.js";
+import { DS4ULuaRuntime } from "./luaEngine.js";
 
 export interface SimulationChoice {
   targetNodeId: string;
   menuText: string;
   responseText: string;
   speakerId: string | null;
+  conversantId?: string | null;
+  enabled?: boolean;
 }
 
 export interface SimulationHistoryEntry {
@@ -23,9 +26,13 @@ export interface SimulationHistoryEntry {
   nodeType: AnyDialogueNode["type"];
   speakerName?: string;
   speakerId?: string | null;
+  conversantName?: string;
+  conversantId?: string | null;
   text?: string;
   menuText?: string;
+  sequence?: string;
   executedActions?: string[];
+  alerts?: string[];
   timestamp: number;
 }
 
@@ -36,9 +43,11 @@ export interface SimulationState {
   currentNodeId: string | null;
   currentNode: AnyDialogueNode | null;
   currentSpeakerName: string;
+  currentConversantName: string;
   availableChoices: SimulationChoice[];
   history: SimulationHistoryEntry[];
   variables: VariableEnvironment;
+  alerts: string[];
   error?: string;
 }
 
@@ -46,6 +55,7 @@ export class DialogueSimulationEngine {
   private project: Project;
   private conversation: Conversation;
   private state: SimulationState;
+  private luaRuntime: DS4ULuaRuntime;
 
   constructor(
     conversation: Conversation,
@@ -60,15 +70,30 @@ export class DialogueSimulationEngine {
       initialVariableOverrides
     );
 
+    this.luaRuntime = new DS4ULuaRuntime(project);
+
+    // Apply any initial variable overrides to Lua runtime
+    if (initialVariableOverrides) {
+      for (const [k, v] of Object.entries(initialVariableOverrides)) {
+        this.luaRuntime.setVariable(k, v);
+      }
+    }
+
     this.state = {
       status: "idle",
       currentNodeId: null,
       currentNode: null,
       currentSpeakerName: "",
+      currentConversantName: "",
       availableChoices: [],
       history: [],
       variables: env,
+      alerts: [],
     };
+  }
+
+  public getLuaRuntime(): DS4ULuaRuntime {
+    return this.luaRuntime;
   }
 
   public getState(): SimulationState {
@@ -77,23 +102,25 @@ export class DialogueSimulationEngine {
       availableChoices: [...this.state.availableChoices],
       history: [...this.state.history],
       variables: { ...this.state.variables },
+      alerts: [...this.state.alerts],
     };
   }
 
   public setVariable(nameOrId: string, value: VariableValue): void {
     this.state.variables[nameOrId] = value;
-    // If nameOrId is an ID, also update the variable's name key if known
     const found = this.project.variables.find(
       (v) => v.id === nameOrId || v.name === nameOrId
     );
     if (found) {
       this.state.variables[found.id] = value;
       this.state.variables[found.name] = value;
+      this.luaRuntime.setVariable(found.name, value);
+    } else {
+      this.luaRuntime.setVariable(nameOrId, value);
     }
   }
 
   public start(): SimulationState {
-    // 1. Locate entry point
     let startNodeId = this.conversation.startNodeId;
     if (!startNodeId) {
       const startNode = this.conversation.nodes.find((n) => n.type === "start");
@@ -101,7 +128,6 @@ export class DialogueSimulationEngine {
     }
 
     if (!startNodeId) {
-      // If no start node, pick first node if available
       if (this.conversation.nodes.length > 0) {
         startNodeId = this.conversation.nodes[0].id;
       } else {
@@ -113,6 +139,7 @@ export class DialogueSimulationEngine {
 
     this.state.status = "running";
     this.state.history = [];
+    this.state.alerts = [];
 
     // Advance into starting node
     this.navigateToNode(startNodeId);
@@ -130,25 +157,55 @@ export class DialogueSimulationEngine {
       return this.getState();
     }
 
-    // Record the chosen option into history
+    // Execute choice node
     if (choiceNode.type === "player_response") {
-      const speaker = this.resolveSpeaker(choiceNode.speakerId);
+      const speaker = this.resolveSpeaker(choiceNode.speakerId) || "Player";
+      const conversant = this.resolveSpeaker(choiceNode.conversantId);
+
+      this.luaRuntime.setConversationContext(speaker, conversant);
+
+      // Execute Lua script if present
+      let alerts: string[] = [];
+      if (choiceNode.script) {
+        const scriptRes = this.luaRuntime.executeScript(choiceNode.script, {
+          actorName: speaker,
+          conversantName: conversant,
+        });
+        if (scriptRes.alerts.length > 0) {
+          alerts = scriptRes.alerts;
+          this.state.alerts.push(...alerts);
+        }
+      }
+
+      // Execute legacy actions if any
+      this.executeNodeActions(choiceNode);
+      this.syncVariablesFromLua();
+
+      const rawText = choiceNode.responseText || choiceNode.menuText;
+      const evaluatedText = this.luaRuntime.evaluateText(rawText);
+
       this.state.history.push({
         stepIndex: this.state.history.length,
         nodeId: choiceNode.id,
         nodeType: choiceNode.type,
-        speakerName: speaker || "Player",
+        speakerName: speaker,
         speakerId: choiceNode.speakerId,
-        text: choiceNode.responseText || choiceNode.menuText,
+        conversantName: conversant,
+        conversantId: choiceNode.conversantId,
+        text: evaluatedText,
         menuText: choiceNode.menuText,
+        sequence: choiceNode.sequence,
+        alerts,
         timestamp: Date.now(),
       });
 
-      // Execute any node actions if present
-      this.executeNodeActions(choiceNode);
+      // Update SimStatus in Lua
+      const cId = this.conversation.externalId ?? this.conversation.id;
+      const nId = choiceNode.externalId ?? choiceNode.id;
+      this.luaRuntime.setSimStatus(cId, nId, "WasDisplayed");
     }
 
-    // Now advance from this choice node to its targets
+    // Advance from choice node
     this.advanceFromNode(choiceNode.id);
     return this.getState();
   }
@@ -172,18 +229,19 @@ export class DialogueSimulationEngine {
     this.state.currentNodeId = node.id;
     this.state.currentNode = node;
 
-    // Handle Start node: auto-advance immediately to next node
+    // Start node: advance immediately
     if (node.type === "start") {
       this.advanceFromNode(node.id);
       return;
     }
 
-    // Handle Action node: execute and auto-advance
+    // Action node: execute and advance
     if (node.type === "action") {
       const executed: string[] = [];
       const res = executeAction(node, this.state.variables);
       if (res.modifiedKey) {
         executed.push(`Set ${res.modifiedKey} = ${String(res.newValue)}`);
+        this.luaRuntime.setVariable(res.modifiedKey, res.newValue as any);
       }
 
       this.state.history.push({
@@ -199,9 +257,17 @@ export class DialogueSimulationEngine {
       return;
     }
 
-    // Handle Condition node: evaluate expression and route accordingly
+    // Condition node
     if (node.type === "condition") {
-      const passes = evaluateExpressionString(node.expression, this.state.variables);
+      // First try Lua if expression looks like Lua or evaluate via evaluator
+      let passes = false;
+      const luaRes = this.luaRuntime.evaluateCondition(node.expression);
+      if (!luaRes.error) {
+        passes = luaRes.passed;
+      } else {
+        passes = evaluateExpressionString(node.expression, this.state.variables);
+      }
+
       this.state.history.push({
         stepIndex: this.state.history.length,
         nodeId: node.id,
@@ -210,7 +276,6 @@ export class DialogueSimulationEngine {
         timestamp: Date.now(),
       });
 
-      // Advance: if passes, take outgoing connection; if not and multiple connections, take second or continue
       const outgoing = this.conversation.connections.filter(
         (c) => c.sourceNodeId === node.id
       );
@@ -225,56 +290,120 @@ export class DialogueSimulationEngine {
       } else if (outgoing.length > 1) {
         this.navigateToNode(outgoing[1].targetNodeId);
       } else {
-        // Condition failed and no fallback path
         this.state.status = "ended";
       }
       return;
     }
 
-    // Handle End node:
+    // End node
     if (node.type === "end") {
       this.state.status = "ended";
       this.state.history.push({
         stepIndex: this.state.history.length,
         nodeId: node.id,
         nodeType: node.type,
-        text: node.label || "Conversation ended",
+        text: "Conversation ended",
         timestamp: Date.now(),
       });
       return;
     }
 
-    // Handle Dialogue node:
+    // Dialogue node
     if (node.type === "dialogue") {
-      const speaker = this.resolveSpeaker(node.speakerId);
-      this.state.currentSpeakerName = speaker || "Narrator";
+      const speaker = this.resolveSpeaker(node.speakerId) || "Narrator";
+      const conversant = this.resolveSpeaker(node.conversantId);
 
+      this.state.currentSpeakerName = speaker;
+      this.state.currentConversantName = conversant;
+
+      this.luaRuntime.setConversationContext(speaker, conversant);
+
+      // Check node condition if present
+      if (node.conditionsString) {
+        const condRes = this.luaRuntime.evaluateCondition(node.conditionsString, {
+          actorName: speaker,
+          conversantName: conversant,
+        });
+        if (!condRes.passed && node.falseConditionAction === "Block") {
+          this.state.status = "ended";
+          this.state.error = `Condition blocked: ${node.conditionsString}`;
+          return;
+        }
+      }
+
+      // Execute Lua script if present
+      let alerts: string[] = [];
+      if (node.script) {
+        const scriptRes = this.luaRuntime.executeScript(node.script, {
+          actorName: speaker,
+          conversantName: conversant,
+        });
+        if (scriptRes.alerts.length > 0) {
+          alerts = scriptRes.alerts;
+          this.state.alerts.push(...alerts);
+        }
+      }
+
+      // Execute legacy actions if any
       this.executeNodeActions(node);
+      this.syncVariablesFromLua();
+
+      // Evaluate dialogue text with [lua()] and [var=] markup
+      const evaluatedText = this.luaRuntime.evaluateText(node.dialogueText);
 
       this.state.history.push({
         stepIndex: this.state.history.length,
         nodeId: node.id,
         nodeType: node.type,
-        speakerName: speaker || "Narrator",
+        speakerName: speaker,
         speakerId: node.speakerId,
-        text: node.dialogueText,
+        conversantName: conversant,
+        conversantId: node.conversantId,
+        text: evaluatedText,
         menuText: node.menuText,
+        sequence: node.sequence,
+        alerts,
         timestamp: Date.now(),
       });
 
-      // Check if subsequent nodes are player choices
+      // Update SimStatus in Lua
+      const cId = this.conversation.externalId ?? this.conversation.id;
+      const nId = node.externalId ?? node.id;
+      this.luaRuntime.setSimStatus(cId, nId, "WasDisplayed");
+
+      // Check outgoing nodes for player choices
       const outgoing = this.getValidOutgoing(node.id);
       const playerChoices: SimulationChoice[] = [];
 
       for (const targetId of outgoing) {
         const targetNode = this.conversation.nodes.find((n) => n.id === targetId);
         if (targetNode && targetNode.type === "player_response") {
-          playerChoices.push({
-            targetNodeId: targetNode.id,
-            menuText: targetNode.menuText || targetNode.responseText,
-            responseText: targetNode.responseText,
-            speakerId: targetNode.speakerId,
-          });
+          // Check condition on the response node
+          let choiceAllowed = true;
+          if (targetNode.conditionsString) {
+            const respCond = this.luaRuntime.evaluateCondition(
+              targetNode.conditionsString,
+              { actorName: speaker, conversantName: conversant }
+            );
+            if (!respCond.passed && targetNode.falseConditionAction === "Block") {
+              choiceAllowed = false;
+            }
+          }
+
+          if (choiceAllowed) {
+            playerChoices.push({
+              targetNodeId: targetNode.id,
+              menuText: targetNode.menuText || targetNode.responseText,
+              responseText: this.luaRuntime.evaluateText(targetNode.responseText),
+              speakerId: targetNode.speakerId,
+              conversantId: targetNode.conversantId,
+              enabled: true,
+            });
+
+            // Mark choice WasOffered in Lua
+            const choiceNId = targetNode.externalId ?? targetNode.id;
+            this.luaRuntime.setSimStatus(cId, choiceNId, "WasOffered");
+          }
         }
       }
 
@@ -288,7 +417,6 @@ export class DialogueSimulationEngine {
       return;
     }
 
-    // Any other node type
     this.advanceFromNode(node.id);
   }
 
@@ -300,17 +428,28 @@ export class DialogueSimulationEngine {
       return;
     }
 
-    // Check if targets are player response choices
     const choiceTargets: SimulationChoice[] = [];
     for (const tId of validTargets) {
       const tNode = this.conversation.nodes.find((n) => n.id === tId);
       if (tNode && tNode.type === "player_response") {
-        choiceTargets.push({
-          targetNodeId: tNode.id,
-          menuText: tNode.menuText || tNode.responseText,
-          responseText: tNode.responseText,
-          speakerId: tNode.speakerId,
-        });
+        let choiceAllowed = true;
+        if (tNode.conditionsString) {
+          const respCond = this.luaRuntime.evaluateCondition(tNode.conditionsString);
+          if (!respCond.passed && tNode.falseConditionAction === "Block") {
+            choiceAllowed = false;
+          }
+        }
+
+        if (choiceAllowed) {
+          choiceTargets.push({
+            targetNodeId: tNode.id,
+            menuText: tNode.menuText || tNode.responseText,
+            responseText: this.luaRuntime.evaluateText(tNode.responseText),
+            speakerId: tNode.speakerId,
+            conversantId: tNode.conversantId,
+            enabled: true,
+          });
+        }
       }
     }
 
@@ -320,7 +459,6 @@ export class DialogueSimulationEngine {
       return;
     }
 
-    // Otherwise, transition to the first target node
     this.navigateToNode(validTargets[0]);
   }
 
@@ -348,6 +486,17 @@ export class DialogueSimulationEngine {
     if ("actions" in node && Array.isArray(node.actions)) {
       for (const act of node.actions) {
         executeAction(act, this.state.variables);
+      }
+    }
+  }
+
+  private syncVariablesFromLua(): void {
+    const luaVars = this.luaRuntime.getAllVariables();
+    for (const [k, v] of Object.entries(luaVars)) {
+      this.state.variables[k] = v;
+      const found = this.project.variables.find((vObj) => vObj.name === k);
+      if (found) {
+        this.state.variables[found.id] = v;
       }
     }
   }

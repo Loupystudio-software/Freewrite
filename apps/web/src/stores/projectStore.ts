@@ -7,6 +7,8 @@ import {
   type Project,
   type Conversation,
   type Variable,
+  type Actor,
+  type Item,
   type ValidationResult,
 } from "@freewrite/core";
 import {
@@ -37,6 +39,12 @@ interface ProjectState {
   addVariable: (variable: Variable) => void;
   updateVariable: (id: string, patch: Partial<Variable>) => void;
   removeVariable: (id: string) => void;
+  addActor: (actor: Actor) => void;
+  updateActor: (id: string, patch: Partial<Actor>) => void;
+  removeActor: (id: string) => void;
+  addItem: (item: Item) => void;
+  updateItem: (id: string, patch: Partial<Item>) => void;
+  removeItem: (id: string) => void;
   markDirty: () => void;
   saveToHandle: () => Promise<void>;
   saveAs: () => Promise<void>;
@@ -165,6 +173,74 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     const updated: Project = {
       ...project,
       variables: project.variables.filter((v) => v.id !== id),
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  addActor: (actor) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      actors: [...project.actors, actor],
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  updateActor: (id, patch) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      actors: project.actors.map((a) => (a.id === id ? { ...a, ...patch } : a)),
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  removeActor: (id) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      actors: project.actors.filter((a) => a.id !== id),
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  addItem: (item) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      items: [...(project.items || []), item],
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  updateItem: (id, patch) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      items: (project.items || []).map((it) =>
+        it.id === id ? { ...it, ...patch } : it
+      ),
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  removeItem: (id) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      items: (project.items || []).filter((it) => it.id !== id),
     };
     const validationResult = validateProject(updated);
     set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });

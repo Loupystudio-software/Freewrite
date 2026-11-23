@@ -162,8 +162,8 @@ export function validateProject(project: Project): ValidationResult {
       }
 
       for (const node of conv.nodes) {
-        // Comments are non-executable design annotations and start node is root
-        if (node.type !== "comment" && node.id !== effectiveStartId && !visited.has(node.id)) {
+        // Start node is root; verify all other nodes are reachable
+        if (node.id !== effectiveStartId && !visited.has(node.id)) {
           warnings.push({
             code: "UNREACHABLE_NODE",
             message: `Node ${node.id} (${node.type}) is not reachable from the Start node in "${conv.title}".`,

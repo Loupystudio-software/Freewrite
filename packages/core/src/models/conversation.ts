@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { DialogueNodeUnionSchema } from "./node.js";
+import { DialogueNodeUnionSchema, DialogueNodePrioritySchema } from "./node.js";
 import { ConnectionSchema } from "./connection.js";
+import { CustomFieldSchema } from "./customField.js";
 
 export const ConversationSchema = z.object({
   id: z.string().uuid(),
@@ -9,9 +10,11 @@ export const ConversationSchema = z.object({
   description: z.string().default(""),
   actorId: z.string().uuid().nullable().default(null),
   conversantId: z.string().uuid().nullable().default(null),
+  priority: DialogueNodePrioritySchema.default("Normal"),
   startNodeId: z.string().uuid().nullable().default(null),
   nodes: z.array(DialogueNodeUnionSchema).default([]),
   connections: z.array(ConnectionSchema).default([]),
+  fields: z.array(CustomFieldSchema).default([]),
   metadata: z.record(z.unknown()).default({}),
 });
 

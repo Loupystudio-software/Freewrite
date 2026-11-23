@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Save, Settings, Users, Sliders, Play, Wifi, ArrowDownUp } from "lucide-react";
+import { Save, Settings, Users, Sliders, Play, Wifi, ArrowDownUp, User, Compass } from "lucide-react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
 import {
@@ -10,6 +10,8 @@ import {
 
 interface Props {
   onNewProject: () => void;
+  onOpenActors: () => void;
+  onOpenQuests: () => void;
   onOpenVariables: () => void;
   onOpenSimulator: () => void;
   onOpenCollaboration: () => void;
@@ -18,6 +20,8 @@ interface Props {
 
 export function TopBar({
   onNewProject,
+  onOpenActors,
+  onOpenQuests,
   onOpenVariables,
   onOpenSimulator,
   onOpenCollaboration,
@@ -126,6 +130,32 @@ export function TopBar({
       {/* Main Action Shortcuts */}
       {project && (
         <div className="flex items-center gap-1.5 mr-2">
+          {/* Actors Manager button */}
+          <button
+            onClick={onOpenActors}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-fw-muted hover:text-fw-text bg-fw-bg border border-fw-border rounded hover:border-fw-text transition-colors"
+            title="Manage Actors & Characters (DS4U)"
+          >
+            <User size={13} className="text-blue-400" />
+            <span>Actors</span>
+            <span className="px-1.5 py-0.2 rounded-full bg-fw-panel border border-fw-border text-[10px] text-fw-muted">
+              {project.actors.length}
+            </span>
+          </button>
+
+          {/* Quests & Items Manager button */}
+          <button
+            onClick={onOpenQuests}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-fw-muted hover:text-fw-text bg-fw-bg border border-fw-border rounded hover:border-fw-text transition-colors"
+            title="Manage Quests & Items (DS4U)"
+          >
+            <Compass size={13} className="text-amber-400" />
+            <span>Quests</span>
+            <span className="px-1.5 py-0.2 rounded-full bg-fw-panel border border-fw-border text-[10px] text-fw-muted">
+              {project.items?.length || 0}
+            </span>
+          </button>
+
           {/* Variables Manager button */}
           <button
             onClick={onOpenVariables}

@@ -5,6 +5,7 @@ import type { Conversation } from "../models/conversation.js";
 import type { AnyDialogueNode } from "../models/node.js";
 import type { Connection } from "../models/connection.js";
 import type { Variable } from "../models/variable.js";
+import type { Item } from "../models/item.js";
 
 /**
  * Initializes a Y.Doc structure matching the Freewrite specification from Section 7.2.
@@ -42,6 +43,15 @@ export function initYDocFromProject(project: Project, existingDoc?: Y.Doc): Y.Do
       varsMap.set(variable.id, variable);
     }
 
+    // Items map
+    const itemsMap = doc.getMap<Item>("items");
+    itemsMap.clear();
+    if (project.items) {
+      for (const it of project.items) {
+        itemsMap.set(it.id, it);
+      }
+    }
+
     // Conversations map
     const convsMap = doc.getMap("conversations");
     convsMap.clear();
@@ -55,6 +65,8 @@ export function initYDocFromProject(project: Project, existingDoc?: Y.Doc): Y.Do
       convMap.set("actorId", conv.actorId ?? null);
       convMap.set("conversantId", conv.conversantId ?? null);
       convMap.set("startNodeId", conv.startNodeId ?? null);
+      convMap.set("priority", conv.priority || "Normal");
+      convMap.set("fields", conv.fields || []);
       convMap.set("metadata", conv.metadata || {});
 
       // Nodes map inside conversation
@@ -104,6 +116,14 @@ export function extractProjectFromYDoc(doc: Y.Doc): Project {
     variables.push(variable);
   });
 
+  const itemsMap = doc.getMap<Item>("items");
+  const items: Item[] = [];
+  if (itemsMap) {
+    itemsMap.forEach((item) => {
+      items.push(item);
+    });
+  }
+
   const convsMap = doc.getMap("conversations");
   const conversations: Conversation[] = [];
 
@@ -130,7 +150,9 @@ export function extractProjectFromYDoc(doc: Y.Doc): Project {
         description: (convMap.get("description") as string) || "",
         actorId: (convMap.get("actorId") as string) ?? null,
         conversantId: (convMap.get("conversantId") as string) ?? null,
+        priority: (convMap.get("priority") as any) || "Normal",
         startNodeId: (convMap.get("startNodeId") as string) ?? null,
+        fields: (convMap.get("fields") as any) || [],
         metadata: (convMap.get("metadata") as Record<string, unknown>) || {},
         nodes,
         connections,
@@ -152,7 +174,7 @@ export function extractProjectFromYDoc(doc: Y.Doc): Project {
     actors,
     conversations,
     variables,
-    items: [],
+    items,
     locations: [],
     metadata: {
       applicationVersion: (rootMetaMap.get("applicationVersion") as string) || "0.1.0",
