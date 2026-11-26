@@ -1,15 +1,19 @@
 import React from "react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
+import { useDocumentStore } from "../../stores/documentStore";
 import { NodeInspector } from "../inspector/NodeInspector";
 import { ConversationInspector } from "../inspector/ConversationInspector";
+import { DocumentInspector } from "../inspector/DocumentInspector";
 
 export function Inspector() {
   const { project, updateProjectMeta } = useProjectStore();
   const { activeConversationId, selectedNodeId } = useConversationStore();
+  const { activeDocumentId, viewMode } = useDocumentStore();
 
   const activeConv = project?.conversations.find((c) => c.id === activeConversationId);
   const selectedNode = activeConv?.nodes.find((n) => n.id === selectedNodeId);
+  const activeDoc = project?.documents?.find((d) => d.id === activeDocumentId);
 
   if (!project) {
     return (
@@ -33,7 +37,9 @@ export function Inspector() {
           Inspector
         </span>
         <span className="text-[10px] text-fw-muted/70">
-          {selectedNode
+          {viewMode === "document" && activeDoc
+            ? "Document"
+            : selectedNode
             ? "Node Properties"
             : activeConv
             ? "Conversation"
@@ -41,7 +47,9 @@ export function Inspector() {
         </span>
       </div>
 
-      {selectedNode ? (
+      {viewMode === "document" && activeDoc ? (
+        <DocumentInspector key={activeDoc.id} document={activeDoc} project={project} />
+      ) : selectedNode ? (
         <NodeInspector key={selectedNode.id} node={selectedNode} />
       ) : activeConv ? (
         <ConversationInspector key={activeConv.id} conversation={activeConv} />

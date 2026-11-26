@@ -6,6 +6,7 @@ import type { AnyDialogueNode } from "../models/node.js";
 import type { Connection } from "../models/connection.js";
 import type { Variable } from "../models/variable.js";
 import type { Item } from "../models/item.js";
+import type { NarrativeDocument } from "../models/document.js";
 
 /**
  * Initializes a Y.Doc structure matching the Freewrite specification from Section 7.2.
@@ -49,6 +50,15 @@ export function initYDocFromProject(project: Project, existingDoc?: Y.Doc): Y.Do
     if (project.items) {
       for (const it of project.items) {
         itemsMap.set(it.id, it);
+      }
+    }
+
+    // Documents map
+    const docsMap = doc.getMap<NarrativeDocument>("documents");
+    docsMap.clear();
+    if (project.documents) {
+      for (const d of project.documents) {
+        docsMap.set(d.id, d);
       }
     }
 
@@ -124,6 +134,14 @@ export function extractProjectFromYDoc(doc: Y.Doc): Project {
     });
   }
 
+  const docsMap = doc.getMap<NarrativeDocument>("documents");
+  const documents: NarrativeDocument[] = [];
+  if (docsMap) {
+    docsMap.forEach((d) => {
+      documents.push(d);
+    });
+  }
+
   const convsMap = doc.getMap("conversations");
   const conversations: Conversation[] = [];
 
@@ -176,6 +194,7 @@ export function extractProjectFromYDoc(doc: Y.Doc): Project {
     variables,
     items,
     locations: [],
+    documents,
     metadata: {
       applicationVersion: (rootMetaMap.get("applicationVersion") as string) || "0.1.0",
       exportSettings: {},
@@ -260,5 +279,28 @@ export function removeConnectionFromYDoc(
         connsMap.delete(connectionId);
       }
     }
+  });
+}
+
+/**
+ * Syncs a narrative document directly into a shared Y.Doc.
+ */
+export function syncDocumentToYDoc(
+  doc: Y.Doc,
+  narrativeDoc: NarrativeDocument
+): void {
+  doc.transact(() => {
+    const docsMap = doc.getMap<NarrativeDocument>("documents");
+    docsMap.set(narrativeDoc.id, narrativeDoc);
+  });
+}
+
+/**
+ * Removes a narrative document from a shared Y.Doc.
+ */
+export function removeDocumentFromYDoc(doc: Y.Doc, documentId: string): void {
+  doc.transact(() => {
+    const docsMap = doc.getMap<NarrativeDocument>("documents");
+    docsMap.delete(documentId);
   });
 }

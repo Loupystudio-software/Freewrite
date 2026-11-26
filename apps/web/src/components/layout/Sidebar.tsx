@@ -7,21 +7,31 @@ import {
   Plus,
   Trash2,
   MessageSquare,
+  FileText,
 } from "lucide-react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
+import { useDocumentStore } from "../../stores/documentStore";
 import { openProjectFile } from "../../features/storage/fileSystemAccess";
 
 interface Props {
   onNewProject: () => void;
   onNewConversation: () => void;
+  onNewDocument?: () => void;
   onOpenImportExport?: (tab?: "import" | "export") => void;
 }
 
-export function Sidebar({ onNewProject, onNewConversation, onOpenImportExport }: Props) {
+export function Sidebar({
+  onNewProject,
+  onNewConversation,
+  onNewDocument,
+  onOpenImportExport,
+}: Props) {
   const { project, saveToHandle, saveAs, loadProject, setFileHandle } = useProjectStore();
   const { activeConversationId, openConversation, deleteConversation } =
     useConversationStore();
+  const { activeDocumentId, viewMode, openDocument, deleteDocument } =
+    useDocumentStore();
 
   const handleOpen = async () => {
     try {
@@ -102,7 +112,8 @@ export function Sidebar({ onNewProject, onNewConversation, onOpenImportExport }:
         ) : (
           <ul className="space-y-0.5">
             {project.conversations.map((conv) => {
-              const isActive = conv.id === activeConversationId;
+              const isActive =
+                viewMode === "canvas" && conv.id === activeConversationId;
               return (
                 <li
                   key={conv.id}
@@ -128,6 +139,80 @@ export function Sidebar({ onNewProject, onNewConversation, onOpenImportExport }:
               );
             })}
           </ul>
+        )}
+
+        {/* Documents Section */}
+        {project && (
+          <div className="mt-4 pt-2 border-t border-fw-border/60">
+            <div className="flex items-center justify-between px-1 pb-1">
+              <span className="text-[11px] font-semibold text-fw-muted uppercase tracking-wider">
+                Documents
+              </span>
+              {onNewDocument && (
+                <button
+                  onClick={onNewDocument}
+                  className="p-1 text-fw-muted hover:text-sky-400 transition-colors"
+                  title="New Narrative Document"
+                >
+                  <Plus size={14} />
+                </button>
+              )}
+            </div>
+
+            {(project.documents || []).length === 0 ? (
+              <div className="text-[11px] text-fw-muted/70 text-center py-2 px-1">
+                No documents yet.
+                {onNewDocument && (
+                  <button
+                    onClick={onNewDocument}
+                    className="mt-1 block w-full py-0.5 text-sky-400 hover:underline"
+                  >
+                    + Create Document
+                  </button>
+                )}
+              </div>
+            ) : (
+              <ul className="space-y-0.5">
+                {(project.documents || []).map((doc) => {
+                  const isActive =
+                    viewMode === "document" && doc.id === activeDocumentId;
+                  return (
+                    <li
+                      key={doc.id}
+                      onClick={() => openDocument(doc.id)}
+                      className={`group flex items-center justify-between px-2 py-1.5 rounded-sm text-xs cursor-pointer transition-colors ${
+                        isActive
+                          ? "bg-fw-bg text-sky-400 font-medium border-l-2 border-sky-400"
+                          : "text-fw-text hover:bg-fw-bg"
+                      }`}
+                      title={doc.title}
+                    >
+                      <div className="flex items-center gap-1.5 truncate">
+                        <FileText size={13} className="shrink-0 opacity-70" />
+                        <span className="truncate">{doc.title}</span>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (
+                            confirm(
+                              `Are you sure you want to delete document "${doc.title}"?`
+                            )
+                          ) {
+                            deleteDocument(doc.id);
+                          }
+                        }}
+                        className="opacity-0 group-hover:opacity-100 p-0.5 hover:text-fw-error text-fw-muted transition-opacity shrink-0"
+                        title="Delete document"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
         )}
       </div>
 

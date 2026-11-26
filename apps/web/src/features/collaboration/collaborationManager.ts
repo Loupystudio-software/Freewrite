@@ -7,9 +7,12 @@ import {
   removeNodeFromYDoc,
   syncConnectionToYDoc,
   removeConnectionFromYDoc,
+  syncDocumentToYDoc,
+  removeDocumentFromYDoc,
   type Project,
   type AnyDialogueNode,
   type Connection,
+  type NarrativeDocument,
 } from "@freewrite/core";
 import { useProjectStore } from "../../stores/projectStore";
 
@@ -186,6 +189,16 @@ class CollaborationManager {
   public syncFullProject(project: Project): void {
     if (!this.doc || this.isApplyingRemoteUpdate) return;
     initYDocFromProject(project, this.doc);
+  }
+
+  public syncDocument(narrativeDoc: NarrativeDocument): void {
+    if (!this.doc || this.isApplyingRemoteUpdate) return;
+    syncDocumentToYDoc(this.doc, narrativeDoc);
+  }
+
+  public removeDocument(documentId: string): void {
+    if (!this.doc || this.isApplyingRemoteUpdate) return;
+    removeDocumentFromYDoc(this.doc, documentId);
   }
 
   // --- Internal Updates ---

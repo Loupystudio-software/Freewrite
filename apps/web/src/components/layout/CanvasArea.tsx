@@ -1,17 +1,22 @@
 import React from "react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
+import { useDocumentStore } from "../../stores/documentStore";
 import { DialogueCanvas } from "../canvas/DialogueCanvas";
-import { MessageSquarePlus } from "lucide-react";
+import { DocumentEditor } from "../documents/DocumentEditor";
+import { MessageSquarePlus, FileText } from "lucide-react";
 
 interface CanvasAreaProps {
   onNewConversation?: () => void;
+  onNewDocument?: () => void;
 }
 
-export function CanvasArea({ onNewConversation }: CanvasAreaProps) {
+export function CanvasArea({ onNewConversation, onNewDocument }: CanvasAreaProps) {
   const project = useProjectStore((s) => s.project);
   const activeConversationId = useConversationStore((s) => s.activeConversationId);
+  const { activeDocumentId, viewMode } = useDocumentStore();
   const activeConv = project?.conversations.find((c) => c.id === activeConversationId);
+  const activeDoc = project?.documents?.find((d) => d.id === activeDocumentId);
 
   if (!project) {
     return (
@@ -40,6 +45,10 @@ export function CanvasArea({ onNewConversation }: CanvasAreaProps) {
     );
   }
 
+  if (viewMode === "document" && activeDoc) {
+    return <DocumentEditor key={activeDoc.id} document={activeDoc} project={project} />;
+  }
+
   if (!activeConv) {
     return (
       <div
@@ -56,20 +65,31 @@ export function CanvasArea({ onNewConversation }: CanvasAreaProps) {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center select-none flex flex-col items-center">
             <div className="text-fw-muted text-sm font-medium mb-1">
-              No conversation selected
+              No conversation or document selected
             </div>
             <div className="text-fw-muted/60 text-xs mb-4">
-              Select a conversation from the sidebar or create a new one
+              Select an item from the sidebar or create a new one
             </div>
-            {onNewConversation && (
-              <button
-                onClick={onNewConversation}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-fw-accent text-white rounded text-xs hover:bg-fw-accent-hover transition-colors shadow"
-              >
-                <MessageSquarePlus size={14} />
-                <span>New Conversation</span>
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {onNewConversation && (
+                <button
+                  onClick={onNewConversation}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-fw-accent text-white rounded text-xs hover:bg-fw-accent-hover transition-colors shadow"
+                >
+                  <MessageSquarePlus size={14} />
+                  <span>New Conversation</span>
+                </button>
+              )}
+              {onNewDocument && (
+                <button
+                  onClick={onNewDocument}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-600 text-white rounded text-xs hover:bg-sky-500 transition-colors shadow"
+                >
+                  <FileText size={14} />
+                  <span>New Document</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

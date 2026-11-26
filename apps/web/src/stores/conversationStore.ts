@@ -6,6 +6,7 @@ import type {
   Conversation,
 } from "@freewrite/core";
 import { useProjectStore } from "./projectStore";
+import { useDocumentStore } from "./documentStore";
 import { collaborationManager } from "../features/collaboration/collaborationManager";
 
 interface ConversationStoreState {
@@ -100,6 +101,7 @@ export const useConversationStore = create<ConversationStoreState>((set, get) =>
 
   openConversation: (id) => {
     set({ activeConversationId: id, selectedNodeId: null });
+    useDocumentStore.getState().setViewMode("canvas");
     collaborationManager.updatePresence({
       activeConversationId: id,
       selectedNodeId: null,

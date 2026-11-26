@@ -376,6 +376,7 @@ export function importProjectFromDialogueSystemCSV(csvText: string): ImportCSVRe
     variables,
     items: [],
     locations: [],
+    documents: [],
     metadata: {
       applicationVersion: "0.1.0",
       exportSettings: {

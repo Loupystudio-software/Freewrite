@@ -24,6 +24,7 @@ export function createEmptyProject(name: string, author: string = ""): Project {
     variables: [],
     items: [],
     locations: [],
+    documents: [],
     metadata: {
       applicationVersion: APP_VERSION,
       exportSettings: {},
