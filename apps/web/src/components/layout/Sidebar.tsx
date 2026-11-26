@@ -2,8 +2,6 @@ import React from "react";
 import {
   FolderOpen,
   FilePlus,
-  Save,
-  Download,
   Plus,
   Trash2,
   MessageSquare,
@@ -21,7 +19,6 @@ interface Props {
   onNewConversation: () => void;
   onNewDocument?: () => void;
   onNewLocation?: () => void;
-  onOpenImportExport?: (tab?: "import" | "export") => void;
 }
 
 export function Sidebar({
@@ -29,9 +26,8 @@ export function Sidebar({
   onNewConversation,
   onNewDocument,
   onNewLocation,
-  onOpenImportExport,
 }: Props) {
-  const { project, saveToHandle, saveAs, loadProject, setFileHandle } = useProjectStore();
+  const { project, loadProject, setFileHandle } = useProjectStore();
   const { activeConversationId, openConversation, deleteConversation } =
     useConversationStore();
   const { activeDocumentId, viewMode, openDocument, deleteDocument } =
@@ -301,37 +297,6 @@ export function Sidebar({
           </div>
         )}
       </div>
-
-      {/* Footer Save Actions */}
-      {project && (
-        <div className="border-t border-fw-border p-2 flex flex-col gap-1.5">
-          <div className="flex gap-1">
-            <button
-              onClick={() => saveToHandle()}
-              className="flex-1 flex items-center justify-center gap-1 py-1 text-xs text-fw-muted border border-fw-border rounded-sm hover:text-fw-text hover:border-fw-text transition-colors"
-              title="Save (Ctrl+S)"
-            >
-              <Save size={12} /> Save
-            </button>
-            <button
-              onClick={() => saveAs()}
-              className="flex-1 flex items-center justify-center gap-1 py-1 text-xs text-fw-muted border border-fw-border rounded-sm hover:text-fw-text hover:border-fw-text transition-colors"
-              title="Save As"
-            >
-              <Download size={12} /> Save As
-            </button>
-          </div>
-          {onOpenImportExport && (
-            <button
-              onClick={() => onOpenImportExport("export")}
-              className="w-full flex items-center justify-center gap-1.5 py-1 text-[11px] text-amber-400/90 border border-amber-900/40 bg-amber-950/20 rounded-sm hover:text-amber-300 hover:border-amber-700/60 transition-colors"
-              title="Export or Import Pixel Crushers Dialogue System format"
-            >
-              Dialogue System Unity...
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }

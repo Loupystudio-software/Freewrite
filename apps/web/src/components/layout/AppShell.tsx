@@ -73,99 +73,6 @@ export function AppShell() {
         }}
       />
 
-      {/* Menu bar */}
-      <div className="h-7 bg-fw-panel border-b border-fw-border flex items-center px-2 gap-1 shrink-0 text-xs text-fw-muted">
-        <button
-          onClick={() => setShowNewProject(true)}
-          className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors"
-        >
-          New Project
-        </button>
-        {project && (
-          <button
-            onClick={() => setShowNewConversation(true)}
-            className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            New Conversation
-          </button>
-        )}
-        {project && (
-          <button
-            onClick={() => setShowNewDocument(true)}
-            className="px-2 py-0.5 text-sky-400 hover:text-sky-300 hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            New Document
-          </button>
-        )}
-        {project && (
-          <button
-            onClick={() => setShowNewLocation(true)}
-            className="px-2 py-0.5 text-emerald-400 hover:text-emerald-300 hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            New Location
-          </button>
-        )}
-        {project && (
-          <button
-            onClick={() => setShowActorsModal(true)}
-            className="px-2 py-0.5 text-blue-400 hover:text-blue-300 hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            Actors ({project.actors.length})
-          </button>
-        )}
-        {project && (
-          <button
-            onClick={() => setShowQuestsModal(true)}
-            className="px-2 py-0.5 text-amber-400 hover:text-amber-300 hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            Quests ({project.items?.length || 0})
-          </button>
-        )}
-        {project && (
-          <button
-            onClick={() => setShowVariablesModal(true)}
-            className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            Variables ({project.variables.length})
-          </button>
-        )}
-        {project && (
-          <button
-            onClick={() => setShowCollaborationModal(true)}
-            className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            Collaborate
-          </button>
-        )}
-        {project && activeConv && (
-          <button
-            onClick={() => setShowSimulatorModal(true)}
-            className="px-2 py-0.5 text-green-400 hover:text-green-300 hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            Simulate Dialogue
-          </button>
-        )}
-        {project && (
-          <button
-            onClick={() => {
-              setImportExportTab("export");
-              setShowImportExportModal(true);
-            }}
-            className="px-2 py-0.5 text-amber-400 hover:text-amber-300 hover:bg-fw-bg rounded-sm transition-colors"
-          >
-            Unity DS4U
-          </button>
-        )}
-        {project && (
-          <button
-            onClick={() => saveToHandle()}
-            className="px-2 py-0.5 hover:text-fw-text hover:bg-fw-bg rounded-sm transition-colors ml-auto"
-          >
-            Save Project
-          </button>
-        )}
-      </div>
-
       {/* Main area */}
       <div className="flex-1 flex overflow-hidden">
         <Sidebar
@@ -173,10 +80,6 @@ export function AppShell() {
           onNewConversation={() => setShowNewConversation(true)}
           onNewDocument={() => setShowNewDocument(true)}
           onNewLocation={() => setShowNewLocation(true)}
-          onOpenImportExport={(tab) => {
-            setImportExportTab(tab || "export");
-            setShowImportExportModal(true);
-          }}
         />
         <CanvasArea
           onNewConversation={() => setShowNewConversation(true)}
