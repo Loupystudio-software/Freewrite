@@ -17,6 +17,7 @@
   "dependencies": {
     "fast-xml-parser": "^5.12.1",
     "fengari": "^0.1.5",
+    "fengari-web": "^0.1.4",
     "uuid": "^9.0.0",
     "yjs": "^13.6.33",
     "zod": "^3.22.0"

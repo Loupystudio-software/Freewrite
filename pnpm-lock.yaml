@@ -100,6 +100,9 @@ importers:
       fengari:
         specifier: ^0.1.5
         version: 0.1.5
+      fengari-web:
+        specifier: ^0.1.4
+        version: 0.1.4
       uuid:
         specifier: ^9.0.0
         version: 9.0.1
@@ -802,6 +805,14 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fengari-interop@0.1.4:
+    resolution: {integrity: sha512-4/CW/3PJUo3ebD4ACgE1g/3NGEYSq7OQAyETyypsAl/WeySDBbxExikkayNkZzbpgyC9GyJp8v1DU2VOXxNq7Q==}
+    peerDependencies:
+      fengari: ^0.1.0
+
+  fengari-web@0.1.4:
+    resolution: {integrity: sha512-f+W/Csx9VNyKttxYjZnk6290+Pcs7w7noDVhkuPEt0e51GWoD32vSNHFXhZYzTe8Ni/bhbk5VocNV1RBIgO5iA==}
 
   fengari@0.1.5:
     resolution: {integrity: sha512-0DS4Nn4rV8qyFlQCpKK8brT61EUtswynrpfFTcgLErcilBIBskSMQ86fO2WVuybr14ywyKdRjv91FiRZwnEuvQ==}
@@ -1913,6 +1924,15 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
+
+  fengari-interop@0.1.4(fengari@0.1.5):
+    dependencies:
+      fengari: 0.1.5
+
+  fengari-web@0.1.4:
+    dependencies:
+      fengari: 0.1.5
+      fengari-interop: 0.1.4(fengari@0.1.5)
 
   fengari@0.1.5:
     dependencies:

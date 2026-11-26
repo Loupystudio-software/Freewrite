@@ -1,7 +1,7 @@
 Loupystudio software presents...
 # The Freemake suite
 
-LPBS Freemake suite is a collection of free, open source software solutions aimed at allowing users to freely collaborate on complex projects. We want to provide a collection of tools that will streamline workflows by adding real-time collaboration to the tools we are using ourselves.
+Freemake suite is a collection of free, open source software solutions aimed at allowing users to freely collaborate on complex projects. We want to provide a collection of tools that will streamline workflows by adding real-time collaboration to the tools we are using ourselves.
 Freeware suite is set to includes:
 - Freewrite (collaborative branching narrative writing)
 - Freecap (multiplayer motion capture & cutscene editor for Unity & Blender)
@@ -15,9 +15,8 @@ Freewrite is a FOSS branching narrative editor & project planning tool, aimed at
 Freewrite currently supports the creation & edition of GDDs and branching dialogues, useful for RPGs, VNs, P&C, etc etc...
 In the future, we are planning to add direct support for Naninovel and Dialogue System for Unity (amongst other things), and will integrate new tools such as level planning, timelines, cutscene planning, and more!
 
-Next plans:
-- Add an easier way to start the client & server
-- Proceed to 5th milestone (DS4U feature parity, export & import in DS4U database format)
+### What's next?
+
 - Add support for in-editor CAT (translation)
 - Add configurable keybinds & ability to export settings as json
 - Multiple selection with click drag
@@ -29,13 +28,8 @@ Next plans:
 - Add more visual options, such as more connection types (angular, wire, motherboard)
 - Add better visualization with wire coloring & width depending on priority or status
 
+### Planned features
 
-
-
-
-
-
-Planned features:
 - GDD/Markdown "regular" text editor with real-time collaboration
 	- Markdown todo lists
 	- Markdown tables
@@ -79,7 +73,9 @@ Planned features:
 	- Scripted dialogue export (for DS4U)
 	- Support for WYSIWYG editing of Cinemachine-related work, like camera IDs, etc
 
-The end goal will be to have a collaborative tool that holds:
+### End goal
+
+A collaborative tool that supports:
 - Dialogues
 - Actors/Characters
 - Key items
@@ -92,12 +88,15 @@ The end goal will be to have a collaborative tool that holds:
 - Translations
 - Moodboards
 - Cutscene plans
+- The tool should make it easy to export to Unity and give clear & concise instructions on how to handle generated files!
 
-The tool should make it easy to export to Unity and give clear & concise instructions on how to handle generated files!
+### Current Freewrite issues
 
-
-
-
+- Add "del" shortcut to delete a shape in the location editor.
+- Move "save" and "save as" to the project menu tab (left menu, after "New Project" and "Open Project")
+- New projects should by default include two actors: Player and NPC.
+- Clicking on the warnings at the bottom of the page should list the warnings.
+- Inconsistencies: some of the menus (new project, new conversation, new location, new document, variables, collaborate, DS4U export) don't match the styling of the other menus (eg: no background blur), this is to be fixed.
 
 ## Freecap
 
@@ -126,9 +125,3 @@ Freecap is set to support the following elements:
 	- One folder per character, one file per sequence
 	- etc etc
 - Freecap should remain a high-performance first tool, with multiuser editing & VR support being some of the main focus points
-
-
-
-
-
-
