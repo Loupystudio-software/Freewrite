@@ -1,0 +1,104 @@
+================================================================================
+                    FREEWRITE - NEXT MILESTONES & TASKS
+================================================================================
+
+This document outlines the priority roadmap and feature checklist based on
+user feedback, feature parity with Articy:Draft, Drafft/Drafft 2, Pixel Crushers'
+Dialogue System for Unity (DS4U), and Crowdin (CAT translation mode).
+
+--------------------------------------------------------------------------------
+1. APP CLEANUP & CORE STABILITY
+--------------------------------------------------------------------------------
+[ ] De-duplicate UI elements:
+    - Streamline TopBar and MenuBar to remove redundant buttons.
+    - Provide a unified, clean top navigation bar with clear dropdown menus
+      (File, Edit, Project, View, Tools, Help).
+[ ] Settings Menu implementation:
+    - Dedicated Settings Modal (accessed via gear icon in TopBar).
+    - General: autosave interval, default speaker, author metadata.
+    - Audio: UI sound effects toggle, master volume, individual event volume.
+    - Appearance: Canvas grid styling (dots/lines), wire styles, theme selector.
+    - Keybindings: configurable keyboard shortcuts with JSON export/import.
+[ ] DS4U Compatibility & Edge-Case Verification:
+    - Deep validation of round-trip CSV and Chat Mapper XML exports.
+    - Test edge cases: multiline strings, escaped quotes, special characters in Lua,
+      canvasRect preservation, complex condition trees.
+[ ] Performance & Bundle Optimization:
+    - Code-split large dependencies (React Flow, Fengari, UI libraries).
+    - Verify fast loading in Chromium, Firefox, WebKit, and offline/standalone.
+
+--------------------------------------------------------------------------------
+2. POLISHING & ENHANCING EXISTING FEATURES
+--------------------------------------------------------------------------------
+[ ] Rich Markdown support for Comment Nodes:
+    - Support bold, italics, code blocks, lists, and checklists inside Comment nodes.
+    - Clean inline preview / toggleable edit mode for design annotations.
+[ ] Procedural Web Audio UI Sound System:
+    - Lightweight, zero-latency Web Audio API sound generator (no heavy assets).
+    - Audio feedback cues:
+      * Node creation / spawn sound
+      * Node deletion sound
+      * Node selection / focus click
+      * Edge connection / snap sound
+      * Simulation step / player choice click
+      * Error / warning alert chime
+    - Mute and volume slider in Settings.
+[ ] Connection Wire Customization:
+    - Multiple edge connection paths: Smooth Curved (Bezier), Step/Angular,
+      Orthogonal (Motherboard style).
+    - Wire color and thickness based on priority, condition presence, or speaker color.
+[ ] Multi-Node Selection:
+    - Box / Marquee click-and-drag selection across canvas.
+    - Bulk drag, bulk delete, bulk duplicate, and horizontal/vertical alignment tools.
+
+--------------------------------------------------------------------------------
+3. FEATURE PARITY WITH ARTICY:DRAFT
+--------------------------------------------------------------------------------
+[ ] Narrative Documents / GDD Editor:
+    - Collaborative document editor for Game Design Documents (GDDs).
+    - Collapsible section headings (click header to fold/unfold text).
+    - Direct hyperlinking/referencing to Dialogue Nodes, Actors, Items, and Variables.
+[ ] Locations & World Entities Repository:
+    - Dedicated Locations Manager (ID, name, description, sub-locations, custom fields).
+    - Direct linkage between dialogue nodes, conversations, and Locations.
+[ ] Sub-Flows, Group Nodes & Jump Nodes:
+    - Group node / sub-conversation containers to nest complex sub-branches.
+    - Jump / Portal nodes to link across different conversation graphs seamlessly.
+[ ] Namespaced Variables System:
+    - Organize variables into folder sets (e.g., Player.Stats.Gold, Quests.Chapter1).
+
+--------------------------------------------------------------------------------
+4. FEATURE PARITY WITH DRAFFT / DRAFFT 2
+--------------------------------------------------------------------------------
+[ ] Interactive Timeline of Events:
+    - Horizontal narrative timeline showing sequential story beats and quest milestones.
+    - Linking timeline events directly to conversations and dialogue entry nodes.
+[ ] Command Palette (Ctrl+K / /):
+    - Instant quick-search popup to jump to any node, conversation, character,
+      quest item, or variable.
+[ ] Script & Play Dual-Way Format Converter:
+    - Toggle between Node Graph View and Screenplay/Script Text View.
+    - In-line dialogue script writing with auto-conversion to nodes.
+
+--------------------------------------------------------------------------------
+5. IN-EDITOR CAT (COMPUTER-ASSISTED TRANSLATION) - CROWDIN PARITY
+--------------------------------------------------------------------------------
+[ ] CAT Grid / Spreadsheet Workspace:
+    - Dedicated CAT View tab alongside Graph Editor and Simulator.
+    - Multi-language side-by-side translation table (Source vs Target languages).
+[ ] String Extraction & Status Tracking:
+    - Automatic extraction of dialogue text, menu options, quest text, actor descriptions.
+    - Translation statuses: Untranslated (red), In Progress (yellow),
+      Translated (green), Approved (blue), Outdated/Needs Review (orange).
+[ ] In-Context Dialogue & Tag Safety Inspector:
+    - Preview of speaker portrait, previous and next dialogue lines for context.
+    - Tag Validation Linter: alerts translator if [var=...], [lua(...)], or {markup}
+      tags are missing or malformed in target text.
+[ ] Translation Memory & Termbase / Glossary:
+    - Character name consistency enforcement.
+    - Termbase highlighting and fuzzy matching for recurring phrases.
+[ ] Localization Import & Export:
+    - Export / Import Unity Dialogue System Localization CSV tables.
+    - Export / Import PO / gettext and XLIFF standard localization files.
+
+================================================================================
