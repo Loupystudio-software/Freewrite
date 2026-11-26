@@ -4,6 +4,7 @@ import { ConversationSchema } from "./conversation.js";
 import { VariableSchema } from "./variable.js";
 import { ItemSchema } from "./item.js";
 import { DocumentSchema } from "./document.js";
+import { LocationSchema } from "./location.js";
 
 export const ProjectSchema = z.object({
   format: z.literal("freewrite"),
@@ -20,7 +21,7 @@ export const ProjectSchema = z.object({
   conversations: z.array(ConversationSchema).default([]),
   variables: z.array(VariableSchema).default([]),
   items: z.array(ItemSchema).default([]),
-  locations: z.array(z.unknown()).default([]),
+  locations: z.array(LocationSchema).default([]),
   documents: z.array(DocumentSchema).default([]),
   metadata: z.object({
     applicationVersion: z.string(),

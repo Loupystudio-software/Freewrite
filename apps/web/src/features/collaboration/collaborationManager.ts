@@ -9,10 +9,13 @@ import {
   removeConnectionFromYDoc,
   syncDocumentToYDoc,
   removeDocumentFromYDoc,
+  syncLocationToYDoc,
+  removeLocationFromYDoc,
   type Project,
   type AnyDialogueNode,
   type Connection,
   type NarrativeDocument,
+  type Location,
 } from "@freewrite/core";
 import { useProjectStore } from "../../stores/projectStore";
 
@@ -199,6 +202,16 @@ class CollaborationManager {
   public removeDocument(documentId: string): void {
     if (!this.doc || this.isApplyingRemoteUpdate) return;
     removeDocumentFromYDoc(this.doc, documentId);
+  }
+
+  public syncLocation(location: Location): void {
+    if (!this.doc || this.isApplyingRemoteUpdate) return;
+    syncLocationToYDoc(this.doc, location);
+  }
+
+  public removeLocation(locationId: string): void {
+    if (!this.doc || this.isApplyingRemoteUpdate) return;
+    removeLocationFromYDoc(this.doc, locationId);
   }
 
   // --- Internal Updates ---

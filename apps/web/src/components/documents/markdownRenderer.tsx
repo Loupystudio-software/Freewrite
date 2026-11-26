@@ -2,7 +2,7 @@ import React from "react";
 import type { Project } from "@freewrite/core";
 
 export interface EntityLinkTarget {
-  kind: "actor" | "conv" | "node" | "item" | "var";
+  kind: "actor" | "conv" | "node" | "item" | "var" | "loc";
   id: string;
   secondaryId?: string; // e.g., nodeId when kind === "node" and id === convId
   label: string;
@@ -16,7 +16,7 @@ interface MarkdownRendererProps {
   onEntityClick?: (target: EntityLinkTarget) => void;
 }
 
-const ENTITY_TOKEN_RE = /\[\[(actor|conv|node|item|var):([^|\]]+)\|([^\]]+)\]\]/g;
+const ENTITY_TOKEN_RE = /\[\[(actor|conv|node|item|var|loc):([^|\]]+)\|([^\]]+)\]\]/g;
 
 function renderInline(
   text: string,
@@ -67,6 +67,9 @@ function renderInline(
     } else if (kind === "var") {
       badgeColor = "bg-cyan-950/60 text-cyan-300 border-cyan-700/50 hover:bg-cyan-900/70";
       prefix = "Var";
+    } else if (kind === "loc") {
+      badgeColor = "bg-teal-950/60 text-teal-300 border-teal-700/50 hover:bg-teal-900/70";
+      prefix = "Location";
     }
 
     nodes.push(

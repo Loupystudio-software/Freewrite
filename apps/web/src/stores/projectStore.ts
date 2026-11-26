@@ -10,6 +10,7 @@ import {
   type Actor,
   type Item,
   type NarrativeDocument,
+  type Location,
   type ValidationResult,
 } from "@freewrite/core";
 import {
@@ -49,6 +50,9 @@ interface ProjectState {
   addDocument: (doc: NarrativeDocument) => void;
   updateDocument: (id: string, patch: Partial<NarrativeDocument>) => void;
   removeDocument: (id: string) => void;
+  addLocation: (location: Location) => void;
+  updateLocation: (id: string, patch: Partial<Location>) => void;
+  removeLocation: (id: string) => void;
   markDirty: () => void;
   saveToHandle: () => Promise<void>;
   saveAs: () => Promise<void>;
@@ -280,6 +284,41 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     const updated: Project = {
       ...project,
       documents: (project.documents || []).filter((d) => d.id !== id),
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  addLocation: (location) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      locations: [...(project.locations || []), location],
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  updateLocation: (id, patch) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      locations: (project.locations || []).map((loc) =>
+        loc.id === id ? { ...loc, ...patch } : loc
+      ),
+    };
+    const validationResult = validateProject(updated);
+    set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });
+  },
+
+  removeLocation: (id) => {
+    const { project } = get();
+    if (!project) return;
+    const updated: Project = {
+      ...project,
+      locations: (project.locations || []).filter((loc) => loc.id !== id),
     };
     const validationResult = validateProject(updated);
     set({ project: updated, isDirty: true, saveStatus: "unsaved", validationResult });

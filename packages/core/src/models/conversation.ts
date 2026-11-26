@@ -10,6 +10,7 @@ export const ConversationSchema = z.object({
   description: z.string().default(""),
   actorId: z.string().uuid().nullable().default(null),
   conversantId: z.string().uuid().nullable().default(null),
+  locationId: z.string().uuid().nullable().optional(),
   priority: DialogueNodePrioritySchema.default("Normal"),
   startNodeId: z.string().uuid().nullable().default(null),
   nodes: z.array(DialogueNodeUnionSchema).default([]),

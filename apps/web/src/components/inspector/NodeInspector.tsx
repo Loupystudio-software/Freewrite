@@ -195,6 +195,26 @@ export function NodeInspector({ node }: NodeInspectorProps) {
           </div>
 
           <div>
+            <label className="text-fw-muted block mb-1">Location (Optional)</label>
+            <select
+              value={node.locationId || ""}
+              onChange={(e) =>
+                updateNode(node.id, {
+                  locationId: e.target.value ? e.target.value : null,
+                })
+              }
+              className="w-full bg-fw-bg border border-fw-border rounded px-2 py-1.5 text-fw-text focus:outline-none focus:border-fw-accent"
+            >
+              <option value="">(Inherit / None)</option>
+              {(project?.locations || []).map((loc) => (
+                <option key={loc.id} value={loc.id}>
+                  {loc.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
             <label className="text-fw-muted block mb-1">Menu Text (Title)</label>
             <input
               type="text"

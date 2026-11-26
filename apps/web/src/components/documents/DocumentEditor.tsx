@@ -27,6 +27,7 @@ import type {
 } from "@freewrite/core";
 import { useDocumentStore } from "../../stores/documentStore";
 import { useConversationStore } from "../../stores/conversationStore";
+import { useLocationStore } from "../../stores/locationStore";
 import { useProjectStore } from "../../stores/projectStore";
 import { collaborationManager } from "../../features/collaboration/collaborationManager";
 import { MarkdownRenderer, type EntityLinkTarget } from "./markdownRenderer";
@@ -86,6 +87,7 @@ export function DocumentEditor({ document, project }: DocumentEditorProps) {
   } = useDocumentStore();
 
   const { openConversation, setSelectedNodeId } = useConversationStore();
+  const { openLocation } = useLocationStore();
   const { addConversation } = useProjectStore();
 
   const [mode, setMode] = useState<EditorMode>("split");
@@ -151,6 +153,8 @@ export function DocumentEditor({ document, project }: DocumentEditorProps) {
         setSelectedNodeId(target.secondaryId);
       }
       setViewMode("canvas");
+    } else if (target.kind === "loc") {
+      openLocation(target.id);
     }
   };
 

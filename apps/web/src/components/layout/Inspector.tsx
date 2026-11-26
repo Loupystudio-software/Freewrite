@@ -2,18 +2,25 @@ import React from "react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
 import { useDocumentStore } from "../../stores/documentStore";
+import { useLocationStore } from "../../stores/locationStore";
 import { NodeInspector } from "../inspector/NodeInspector";
 import { ConversationInspector } from "../inspector/ConversationInspector";
 import { DocumentInspector } from "../inspector/DocumentInspector";
+import { LocationInspector } from "../inspector/LocationInspector";
 
 export function Inspector() {
   const { project, updateProjectMeta } = useProjectStore();
   const { activeConversationId, selectedNodeId } = useConversationStore();
   const { activeDocumentId, viewMode } = useDocumentStore();
+  const { activeLocationId, selectedElementId } = useLocationStore();
 
   const activeConv = project?.conversations.find((c) => c.id === activeConversationId);
   const selectedNode = activeConv?.nodes.find((n) => n.id === selectedNodeId);
   const activeDoc = project?.documents?.find((d) => d.id === activeDocumentId);
+  const activeLoc = project?.locations?.find((l) => l.id === activeLocationId);
+  const selectedLocElement = activeLoc?.elements?.find(
+    (el) => el.id === selectedElementId
+  );
 
   if (!project) {
     return (
@@ -37,7 +44,11 @@ export function Inspector() {
           Inspector
         </span>
         <span className="text-[10px] text-fw-muted/70">
-          {viewMode === "document" && activeDoc
+          {viewMode === "location" && activeLoc
+            ? selectedLocElement
+              ? "Map Element"
+              : "Location"
+            : viewMode === "document" && activeDoc
             ? "Document"
             : selectedNode
             ? "Node Properties"
@@ -47,7 +58,14 @@ export function Inspector() {
         </span>
       </div>
 
-      {viewMode === "document" && activeDoc ? (
+      {viewMode === "location" && activeLoc ? (
+        <LocationInspector
+          key={selectedLocElement ? selectedLocElement.id : activeLoc.id}
+          location={activeLoc}
+          selectedElement={selectedLocElement}
+          project={project}
+        />
+      ) : viewMode === "document" && activeDoc ? (
         <DocumentInspector key={activeDoc.id} document={activeDoc} project={project} />
       ) : selectedNode ? (
         <NodeInspector key={selectedNode.id} node={selectedNode} />

@@ -7,6 +7,7 @@ import { BottomBar } from "./BottomBar";
 import { NewProjectDialog } from "../dialogs/NewProjectDialog";
 import { NewConversationDialog } from "../dialogs/NewConversationDialog";
 import { NewDocumentDialog } from "../dialogs/NewDocumentDialog";
+import { NewLocationDialog } from "../dialogs/NewLocationDialog";
 import { VariablesModal } from "../dialogs/VariablesModal";
 import { ActorsModal } from "../dialogs/ActorsModal";
 import { QuestsModal } from "../dialogs/QuestsModal";
@@ -20,6 +21,7 @@ export function AppShell() {
   const [showNewProject, setShowNewProject] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showNewDocument, setShowNewDocument] = useState(false);
+  const [showNewLocation, setShowNewLocation] = useState(false);
   const [showVariablesModal, setShowVariablesModal] = useState(false);
   const [showActorsModal, setShowActorsModal] = useState(false);
   const [showQuestsModal, setShowQuestsModal] = useState(false);
@@ -97,6 +99,14 @@ export function AppShell() {
         )}
         {project && (
           <button
+            onClick={() => setShowNewLocation(true)}
+            className="px-2 py-0.5 text-emerald-400 hover:text-emerald-300 hover:bg-fw-bg rounded-sm transition-colors"
+          >
+            New Location
+          </button>
+        )}
+        {project && (
+          <button
             onClick={() => setShowActorsModal(true)}
             className="px-2 py-0.5 text-blue-400 hover:text-blue-300 hover:bg-fw-bg rounded-sm transition-colors"
           >
@@ -162,6 +172,7 @@ export function AppShell() {
           onNewProject={() => setShowNewProject(true)}
           onNewConversation={() => setShowNewConversation(true)}
           onNewDocument={() => setShowNewDocument(true)}
+          onNewLocation={() => setShowNewLocation(true)}
           onOpenImportExport={(tab) => {
             setImportExportTab(tab || "export");
             setShowImportExportModal(true);
@@ -170,6 +181,7 @@ export function AppShell() {
         <CanvasArea
           onNewConversation={() => setShowNewConversation(true)}
           onNewDocument={() => setShowNewDocument(true)}
+          onNewLocation={() => setShowNewLocation(true)}
         />
         <Inspector />
       </div>
@@ -184,6 +196,9 @@ export function AppShell() {
       )}
       {showNewDocument && (
         <NewDocumentDialog onClose={() => setShowNewDocument(false)} />
+      )}
+      {showNewLocation && (
+        <NewLocationDialog onClose={() => setShowNewLocation(false)} />
       )}
       {showVariablesModal && (
         <VariablesModal onClose={() => setShowVariablesModal(false)} />

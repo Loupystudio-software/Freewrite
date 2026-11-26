@@ -9,7 +9,7 @@ import type {
 import { useProjectStore } from "./projectStore";
 import { collaborationManager } from "../features/collaboration/collaborationManager";
 
-export type WorkspaceViewMode = "canvas" | "document";
+export type WorkspaceViewMode = "canvas" | "document" | "location";
 
 interface DocumentStoreState {
   activeDocumentId: string | null;

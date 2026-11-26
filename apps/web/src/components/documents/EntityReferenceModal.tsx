@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { X, Search, Users, MessageSquare, GitBranch, Package, Variable as VarIcon } from "lucide-react";
+import { X, Search, Users, MessageSquare, GitBranch, Package, Variable as VarIcon, MapPin } from "lucide-react";
 import type { Project } from "@freewrite/core";
 
 interface EntityReferenceModalProps {
@@ -8,7 +8,7 @@ interface EntityReferenceModalProps {
   onClose: () => void;
 }
 
-type FilterTab = "all" | "actor" | "conv" | "node" | "item" | "var";
+type FilterTab = "all" | "actor" | "conv" | "node" | "loc" | "item" | "var";
 
 export function EntityReferenceModal({
   project,
@@ -105,6 +105,19 @@ export function EntityReferenceModal({
       }
     }
 
+    if (tab === "all" || tab === "loc") {
+      for (const l of project.locations || []) {
+        if (!q || l.name.toLowerCase().includes(q)) {
+          list.push({
+            kind: "loc",
+            label: l.name,
+            subtitle: `${l.elements.length} map elements`,
+            token: `[[loc:${l.id}|${l.name}]]`,
+          });
+        }
+      }
+    }
+
     return list;
   }, [project, query, tab]);
 
@@ -113,6 +126,7 @@ export function EntityReferenceModal({
     { id: "actor", label: "Actors" },
     { id: "conv", label: "Flows" },
     { id: "node", label: "Nodes" },
+    { id: "loc", label: "Locations" },
     { id: "item", label: "Quests/Items" },
     { id: "var", label: "Variables" },
   ];
@@ -129,6 +143,8 @@ export function EntityReferenceModal({
         return <Package size={13} className="text-amber-400" />;
       case "var":
         return <VarIcon size={13} className="text-cyan-400" />;
+      case "loc":
+        return <MapPin size={13} className="text-teal-400" />;
     }
   };
 

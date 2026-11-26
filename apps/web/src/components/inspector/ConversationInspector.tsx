@@ -92,6 +92,26 @@ export function ConversationInspector({ conversation }: ConversationInspectorPro
         </div>
 
         <div>
+          <label className="text-fw-muted block mb-1">Location</label>
+          <select
+            value={conversation.locationId || ""}
+            onChange={(e) =>
+              updateConversation(conversation.id, {
+                locationId: e.target.value ? e.target.value : null,
+              })
+            }
+            className="w-full bg-fw-bg border border-fw-border rounded px-2 py-1.5 text-fw-text focus:outline-none focus:border-fw-accent"
+          >
+            <option value="">(None)</option>
+            {(project?.locations || []).map((loc) => (
+              <option key={loc.id} value={loc.id}>
+                {loc.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
           <label className="text-fw-muted block mb-1">Entry Point (Start Node)</label>
           <select
             value={conversation.startNodeId || ""}

@@ -7,6 +7,7 @@ import type { Connection } from "../models/connection.js";
 import type { Variable } from "../models/variable.js";
 import type { Item } from "../models/item.js";
 import type { NarrativeDocument } from "../models/document.js";
+import type { Location } from "../models/location.js";
 
 /**
  * Initializes a Y.Doc structure matching the Freewrite specification from Section 7.2.
@@ -62,6 +63,15 @@ export function initYDocFromProject(project: Project, existingDoc?: Y.Doc): Y.Do
       }
     }
 
+    // Locations map
+    const locsMap = doc.getMap<Location>("locations");
+    locsMap.clear();
+    if (project.locations) {
+      for (const loc of project.locations) {
+        locsMap.set(loc.id, loc);
+      }
+    }
+
     // Conversations map
     const convsMap = doc.getMap("conversations");
     convsMap.clear();
@@ -74,6 +84,7 @@ export function initYDocFromProject(project: Project, existingDoc?: Y.Doc): Y.Do
       convMap.set("description", conv.description);
       convMap.set("actorId", conv.actorId ?? null);
       convMap.set("conversantId", conv.conversantId ?? null);
+      convMap.set("locationId", conv.locationId ?? null);
       convMap.set("startNodeId", conv.startNodeId ?? null);
       convMap.set("priority", conv.priority || "Normal");
       convMap.set("fields", conv.fields || []);
@@ -142,6 +153,14 @@ export function extractProjectFromYDoc(doc: Y.Doc): Project {
     });
   }
 
+  const locsMap = doc.getMap<Location>("locations");
+  const locations: Location[] = [];
+  if (locsMap) {
+    locsMap.forEach((loc) => {
+      locations.push(loc);
+    });
+  }
+
   const convsMap = doc.getMap("conversations");
   const conversations: Conversation[] = [];
 
@@ -168,6 +187,7 @@ export function extractProjectFromYDoc(doc: Y.Doc): Project {
         description: (convMap.get("description") as string) || "",
         actorId: (convMap.get("actorId") as string) ?? null,
         conversantId: (convMap.get("conversantId") as string) ?? null,
+        locationId: (convMap.get("locationId") as string) ?? null,
         priority: (convMap.get("priority") as any) || "Normal",
         startNodeId: (convMap.get("startNodeId") as string) ?? null,
         fields: (convMap.get("fields") as any) || [],
@@ -193,7 +213,7 @@ export function extractProjectFromYDoc(doc: Y.Doc): Project {
     conversations,
     variables,
     items,
-    locations: [],
+    locations,
     documents,
     metadata: {
       applicationVersion: (rootMetaMap.get("applicationVersion") as string) || "0.1.0",
@@ -302,5 +322,25 @@ export function removeDocumentFromYDoc(doc: Y.Doc, documentId: string): void {
   doc.transact(() => {
     const docsMap = doc.getMap<NarrativeDocument>("documents");
     docsMap.delete(documentId);
+  });
+}
+
+/**
+ * Syncs a location directly into a shared Y.Doc.
+ */
+export function syncLocationToYDoc(doc: Y.Doc, location: Location): void {
+  doc.transact(() => {
+    const locsMap = doc.getMap<Location>("locations");
+    locsMap.set(location.id, location);
+  });
+}
+
+/**
+ * Removes a location from a shared Y.Doc.
+ */
+export function removeLocationFromYDoc(doc: Y.Doc, locationId: string): void {
+  doc.transact(() => {
+    const locsMap = doc.getMap<Location>("locations");
+    locsMap.delete(locationId);
   });
 }

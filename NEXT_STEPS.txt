@@ -59,7 +59,7 @@ Dialogue System for Unity (DS4U), and Crowdin (CAT translation mode).
     - Collapsible section headings (click header to fold/unfold text).
     - Direct hyperlinking/referencing to Dialogue Nodes, Actors, Items, and Variables.
     - Markdown support for styling.
-[ ] Locations & World Entities Repository:
+[x] Locations & World Entities Repository:
     - Dedicated Locations Manager (ID, name, description, sub-locations, custom fields).
     - Direct linkage between dialogue nodes, conversations, and Locations.
 [ ] Sub-Flows, Group Nodes & Jump Nodes:

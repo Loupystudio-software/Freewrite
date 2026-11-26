@@ -2,21 +2,30 @@ import React from "react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
 import { useDocumentStore } from "../../stores/documentStore";
+import { useLocationStore } from "../../stores/locationStore";
 import { DialogueCanvas } from "../canvas/DialogueCanvas";
 import { DocumentEditor } from "../documents/DocumentEditor";
-import { MessageSquarePlus, FileText } from "lucide-react";
+import { LocationEditor } from "../locations/LocationEditor";
+import { MessageSquarePlus, FileText, MapPin } from "lucide-react";
 
 interface CanvasAreaProps {
   onNewConversation?: () => void;
   onNewDocument?: () => void;
+  onNewLocation?: () => void;
 }
 
-export function CanvasArea({ onNewConversation, onNewDocument }: CanvasAreaProps) {
+export function CanvasArea({
+  onNewConversation,
+  onNewDocument,
+  onNewLocation,
+}: CanvasAreaProps) {
   const project = useProjectStore((s) => s.project);
   const activeConversationId = useConversationStore((s) => s.activeConversationId);
   const { activeDocumentId, viewMode } = useDocumentStore();
+  const activeLocationId = useLocationStore((s) => s.activeLocationId);
   const activeConv = project?.conversations.find((c) => c.id === activeConversationId);
   const activeDoc = project?.documents?.find((d) => d.id === activeDocumentId);
+  const activeLoc = project?.locations?.find((l) => l.id === activeLocationId);
 
   if (!project) {
     return (
@@ -47,6 +56,10 @@ export function CanvasArea({ onNewConversation, onNewDocument }: CanvasAreaProps
 
   if (viewMode === "document" && activeDoc) {
     return <DocumentEditor key={activeDoc.id} document={activeDoc} project={project} />;
+  }
+
+  if (viewMode === "location" && activeLoc) {
+    return <LocationEditor key={activeLoc.id} location={activeLoc} project={project} />;
   }
 
   if (!activeConv) {
@@ -87,6 +100,15 @@ export function CanvasArea({ onNewConversation, onNewDocument }: CanvasAreaProps
                 >
                   <FileText size={14} />
                   <span>New Document</span>
+                </button>
+              )}
+              {onNewLocation && (
+                <button
+                  onClick={onNewLocation}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded text-xs hover:bg-emerald-500 transition-colors shadow"
+                >
+                  <MapPin size={14} />
+                  <span>New Location</span>
                 </button>
               )}
             </div>
