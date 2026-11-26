@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Save, Settings, Users, Sliders, Play, Wifi, ArrowDownUp, User, Compass } from "lucide-react";
+import { Save, Download, Settings, Users, Sliders, Play, Wifi, ArrowDownUp, User, Compass } from "lucide-react";
 import { useProjectStore } from "../../stores/projectStore";
 import { useConversationStore } from "../../stores/conversationStore";
 import {
@@ -27,7 +27,7 @@ export function TopBar({
   onOpenCollaboration,
   onOpenImportExport,
 }: Props) {
-  const { project, saveStatus, isDirty, saveToHandle } = useProjectStore();
+  const { project, saveStatus, isDirty, saveToHandle, saveAs } = useProjectStore();
   const activeConversationId = useConversationStore((s) => s.activeConversationId);
   const updateProjectMeta = useProjectStore((s) => s.updateProjectMeta);
 
@@ -111,9 +111,8 @@ export function TopBar({
         />
       ) : (
         <span
-          className={`text-sm font-medium cursor-pointer hover:text-fw-accent transition-colors ${
-            project ? "text-fw-text" : "text-fw-muted"
-          }`}
+          className={`text-sm font-medium cursor-pointer hover:text-fw-accent transition-colors ${project ? "text-fw-text" : "text-fw-muted"
+            }`}
           onClick={handleNameClick}
           title={project ? "Click to rename" : ""}
         >
@@ -190,6 +189,29 @@ export function TopBar({
             <ArrowDownUp size={13} className="text-amber-400" />
             <span>Unity DS4U</span>
           </button>
+
+          {/* Save & Save As */}
+          <button
+            onClick={() => saveToHandle()}
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs rounded border transition-colors ${
+              isDirty
+                ? "text-fw-text bg-fw-bg border-fw-accent/70 hover:border-fw-accent"
+                : "text-fw-muted hover:text-fw-text bg-fw-bg border-fw-border hover:border-fw-text"
+            }`}
+            title="Save Project (Ctrl+S)"
+          >
+            <Save size={13} />
+            <span>Save</span>
+          </button>
+
+          <button
+            onClick={() => saveAs()}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-fw-muted hover:text-fw-text bg-fw-bg border border-fw-border rounded hover:border-fw-text transition-colors"
+            title="Save Project As..."
+          >
+            <Download size={13} />
+            <span>Save As</span>
+          </button>
         </div>
       )}
 
@@ -210,11 +232,10 @@ export function TopBar({
 
         <button
           onClick={onOpenCollaboration}
-          className={`flex items-center gap-1.5 px-2 py-1 text-xs rounded border transition-colors ${
-            collabStatus === "connected"
+          className={`flex items-center gap-1.5 px-2 py-1 text-xs rounded border transition-colors ${collabStatus === "connected"
               ? "bg-green-950/30 text-green-300 border-green-600/50 hover:bg-green-900/40"
               : "text-fw-muted hover:text-fw-text border-fw-border hover:border-fw-text bg-fw-bg"
-          }`}
+            }`}
           title="Collaborators & Multiuser Sync"
         >
           {collabStatus === "connected" ? (
@@ -231,16 +252,6 @@ export function TopBar({
       </div>
 
       <div className="flex items-center gap-2 ml-1">
-        {project && isDirty && (
-          <button
-            onClick={() => saveToHandle()}
-            className="flex items-center gap-1 px-2 py-1 text-xs text-fw-muted hover:text-fw-text border border-fw-border rounded hover:border-fw-text transition-colors"
-            title="Save (Ctrl+S)"
-          >
-            <Save size={12} />
-            Save
-          </button>
-        )}
         <button
           className="p-1 text-fw-muted hover:text-fw-text transition-colors"
           title="Settings"
