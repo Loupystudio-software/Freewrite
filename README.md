@@ -6,9 +6,12 @@ Inspired (& integrated) with: Pixel Crusher's Dialogue System for Unity, Articy:
 
 ## How to use?
 
-Simply clone or download the repository, and start the app through start.bat.
+To use the tool, simply click [here](https://loupystudio-software.github.io/Freewrite/)!
+
+Alternatively, if you wanna use it locally (or host a collab server), simply download the [latest version](https://github.com/Loupystudio-software/Freewrite/archive/refs/heads/main.zip), and start the app through start.bat or start.sh.
 To collaborate, open port 1234 on the server's router (user who will host the files) and join through the address provided in the shell.
 If the page fails to load, try reloading it (F5) once.
+A room will keep the changes it has, and overwrite any project you have open when joining it, so save beforehand!
 If you have any other issue, join our Discord to discuss it, or open an issue on the github repo.
 
 ## Development
